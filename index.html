@@ -1016,7 +1016,7 @@ function buildChart(){
     return match ? parseFloat(match[0].replace(',', '.')) : 0;
   });
   const percents = rows.map(r => {
-    const raw = r.children[3].textContent.trim();
+    const raw = r.children[2].textContent.trim();
     const match = raw.match(/([\d.,]+)\s*%/); // número antes del símbolo %
     return match ? parseFloat(match[1].replace(',', '.')) : 0;
   });
