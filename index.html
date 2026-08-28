@@ -1050,77 +1050,118 @@
 <footer>San Luis + Verde · Proyecto escolar de indagación ambiental</footer>
 
 <script>
-// ---------- tab navigation ----------
+<script>
+
+// ============================================
+// NAVEGACIÓN ENTRE SECCIONES
+// ============================================
+
 const steps = document.querySelectorAll('.step');
 const panels = document.querySelectorAll('.panel');
+
 const visited = new Set(['inicio']);
 
+
 function showPanel(id){
-  panels.forEach(p => p.classList.toggle('active', p.id === id));
 
-  steps.forEach(s => {
-    const isActive = s.dataset.target === id;
+  // Mostrar solamente la sección seleccionada
+  panels.forEach(function(panel){
 
-    s.classList.toggle('active', isActive);
-
-    s.setAttribute(
-      'aria-selected',
-      isActive ? 'true' : 'false'
+    panel.classList.toggle(
+      'active',
+      panel.id === id
     );
+
   });
 
+
+  // Actualizar los botones superiores
+  steps.forEach(function(step){
+
+    const active =
+      step.dataset.target === id;
+
+    step.classList.toggle(
+      'active',
+      active
+    );
+
+    step.setAttribute(
+      'aria-selected',
+      active ? 'true' : 'false'
+    );
+
+  });
+
+
+  // Registrar sección visitada
   visited.add(id);
 
-  steps.forEach(s =>
-    s.classList.toggle(
+
+  steps.forEach(function(step){
+
+    step.classList.toggle(
       'done',
-      visited.has(s.dataset.target) &&
-      s.dataset.target !== id
-    )
-  );
+      visited.has(step.dataset.target) &&
+      step.dataset.target !== id
+    );
 
-  window.scrollTo({
-    top: document.querySelector('nav.sendero').offsetTop - 8,
-    behavior:'smooth'
-  });
-}
-
-steps.forEach(s =>
-  s.addEventListener(
-    'click',
-    () => showPanel(s.dataset.target)
-  )
-);
-
-  window.scrollTo({
-    top: document.querySelector('nav.sendero').offsetTop - 8,
-    behavior:'smooth'
   });
 
 
-  // =====================================
-  // SOLUCION: reconstruir la gráfica
-  // cuando Análisis de datos sea visible
-  // =====================================
+  // Subir hasta la navegación
+  const nav =
+    document.querySelector('nav.sendero');
 
+  if(nav){
+
+    window.scrollTo({
+
+      top: nav.offsetTop - 8,
+
+      behavior: 'smooth'
+
+    });
+
+  }
+
+
+  // Si entramos a Análisis,
+  // dibujar la gráfica después de mostrarla
   if(id === 'analisis'){
 
-    setTimeout(() => {
+    setTimeout(function(){
 
       buildChart();
 
-      if(growthChart){
-        growthChart.resize();
-      }
-
-    }, 100);
+    }, 150);
 
   }
 
 }
-steps.forEach(s => s.addEventListener('click', () => showPanel(s.dataset.target)));
 
-// ---------- add plant category row ----------
+
+// ============================================
+// BOTONES DE NAVEGACIÓN
+// ============================================
+
+steps.forEach(function(step){
+
+  step.addEventListener(
+    'click',
+    function(){
+
+      showPanel(
+        step.dataset.target
+      );
+
+    }
+  );
+
+});
+
+
+// ---------- add plant category row ----------// ---------- add plant category row ----------
 document.getElementById('addPlantRow').addEventListener('click', () => {
   const tbody = document.querySelector('#plantTable tbody');
   const tr = document.createElement('tr');
