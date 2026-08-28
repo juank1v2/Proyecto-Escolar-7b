@@ -426,6 +426,28 @@
   .subtab.active{background:var(--leaf);color:#fff;border-color:var(--leaf);}
   .subview{display:none;}
   .subview.active{display:block;animation:fadein .35s ease;}
+
+/* ===== Corrección gráfica ===== */
+.chart-wrap{
+  position:relative;
+  width:100%;
+  height:520px;
+  min-height:520px;
+}
+
+.chart-wrap canvas{
+  display:block;
+  width:100% !important;
+  height:100% !important;
+}
+
+@media(max-width:720px){
+  .chart-wrap{
+    height:620px;
+    min-height:620px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1049,760 +1071,744 @@
 
 <footer>San Luis + Verde · Proyecto escolar de indagación ambiental</footer>
 
-<script>
-<script>
 
-// ============================================
-// NAVEGACIÓN ENTRE SECCIONES
-// ============================================
+<script>
+// ============================================================
+// SAN LUIS + VERDE — JAVASCRIPT COMPLETO Y CORREGIDO
+// ============================================================
 
+// ---------- navegación principal ----------
 const steps = document.querySelectorAll('.step');
 const panels = document.querySelectorAll('.panel');
-
 const visited = new Set(['inicio']);
 
-
-function showPanel(id){
-
-  // Mostrar solamente la sección seleccionada
-  panels.forEach(function(panel){
-
-    panel.classList.toggle(
-      'active',
-      panel.id === id
-    );
-
+function showPanel(id) {
+  panels.forEach(panel => {
+    panel.classList.toggle('active', panel.id === id);
   });
 
-
-  // Actualizar los botones superiores
-  steps.forEach(function(step){
-
-    const active =
-      step.dataset.target === id;
-
-    step.classList.toggle(
-      'active',
-      active
-    );
-
-    step.setAttribute(
-      'aria-selected',
-      active ? 'true' : 'false'
-    );
-
+  steps.forEach(step => {
+    const active = step.dataset.target === id;
+    step.classList.toggle('active', active);
+    step.setAttribute('aria-selected', active ? 'true' : 'false');
   });
 
-
-  // Registrar sección visitada
   visited.add(id);
 
-
-  steps.forEach(function(step){
-
+  steps.forEach(step => {
     step.classList.toggle(
       'done',
       visited.has(step.dataset.target) &&
       step.dataset.target !== id
     );
-
   });
 
+  const nav = document.querySelector('nav.sendero');
 
-  // Subir hasta la navegación
-  const nav =
-    document.querySelector('nav.sendero');
-
-  if(nav){
-
+  if (nav) {
     window.scrollTo({
-
-      top: nav.offsetTop - 8,
-
+      top: Math.max(0, nav.offsetTop - 8),
       behavior: 'smooth'
-
     });
-
   }
 
-
-  // Si entramos a Análisis,
-  // dibujar la gráfica después de mostrarla
-  if(id === 'analisis'){
-
-    setTimeout(function(){
-
+  // La gráfica se dibuja solamente cuando la sección ya es visible.
+  if (id === 'analisis') {
+    setTimeout(() => {
       buildChart();
-
+      if (growthChart) {
+        growthChart.resize();
+      }
     }, 150);
-
   }
-
 }
 
-
-// ============================================
-// BOTONES DE NAVEGACIÓN
-// ============================================
-
-steps.forEach(function(step){
-
-  step.addEventListener(
-    'click',
-    function(){
-
-      showPanel(
-        step.dataset.target
-      );
-
-    }
-  );
-
-});
-
-
-// ---------- add plant category row ----------// ---------- add plant category row ----------
-document.getElementById('addPlantRow').addEventListener('click', () => {
-  const tbody = document.querySelector('#plantTable tbody');
-  const tr = document.createElement('tr');
-  ['Nueva categoría','Resumen de la categoría...','Flor: — Fruto: —','0 — 0,00 %','¿Pregunta? Respuesta.'].forEach((text, i) => {
-    const td = document.createElement('td');
-    td.contentEditable = 'true';
-    td.textContent = text;
-    if(i === 3) td.classList.add('mono');
-    tr.appendChild(td);
+steps.forEach(step => {
+  step.addEventListener('click', () => {
+    showPanel(step.dataset.target);
   });
-  tbody.appendChild(tr);
-  tr.children[0].focus();
-  buildChart();
 });
 
-// ---------- chart: clasificación de plantas por categoría ----------
 
+// ---------- gráfica ----------
 let growthChart = null;
 
-function buildChart(){
-
+function readPlantData() {
   const table = document.getElementById('plantTable');
 
-  if(!table){
-    console.warn('No se encontró plantTable');
-    return;
+  if (!table) {
+    return { labels: [], counts: [], percents: [] };
   }
 
-  const rows = [
-    ...table.querySelectorAll('tbody tr')
-  ];
+  const rows = [...table.querySelectorAll('tbody tr')];
 
-  if(rows.length === 0){
-    console.warn('No hay filas en plantTable');
-    return;
-  }
+  const labels = [];
+  const counts = [];
+  const percents = [];
 
+  rows.forEach(row => {
+    if (row.children.length < 4) return;
 
-  // ==========================
-  // CATEGORÍAS
-  // ==========================
+    const label = row.children[0].textContent.trim();
+    const raw = row.children[3].textContent.trim();
 
-  const labels = rows.map(function(row){
+    // La celda tiene el formato: 100 — 12,90 %
+    const numberMatch = raw.match(/^\s*([\d.]+(?:,\d+)?)/);
+    const percentMatch = raw.match(/([\d.,]+)\s*%/);
 
-    return row.children[0]
-      ? row.children[0].textContent.trim()
-      : 'Sin categoría';
+    let count = numberMatch
+      ? parseFloat(numberMatch[1].replace(/\./g, '').replace(',', '.'))
+      : 0;
 
+    let percent = percentMatch
+      ? parseFloat(percentMatch[1].replace(',', '.'))
+      : 0;
+
+    if (!Number.isFinite(count)) count = 0;
+    if (!Number.isFinite(percent)) percent = 0;
+
+    labels.push(label || 'Sin categoría');
+    counts.push(count);
+    percents.push(percent);
   });
 
+  return { labels, counts, percents };
+}
 
-  // ==========================
-  // CANTIDADES
-  // ==========================
+function updateStats(labels, counts, percents) {
+  const total = counts.reduce((sum, value) => sum + value, 0);
 
-  const counts = rows.map(function(row){
-
-    const cell =
-      row.children[3];
-
-    if(!cell){
-      return 0;
-    }
-
-    const raw =
-      cell.textContent.trim();
-
-    const match =
-      raw.match(/[\d.,]+/);
-
-    if(!match){
-      return 0;
-    }
-
-    return parseFloat(
-      match[0]
-        .replace(/\./g, '')
-        .replace(',', '.')
-    );
-
-  });
-
-
-  // ==========================
-  // PORCENTAJES
-  // ==========================
-
-  const percents = rows.map(function(row){
-
-    const cell =
-      row.children[3];
-
-    if(!cell){
-      return 0;
-    }
-
-    const raw =
-      cell.textContent.trim();
-
-    const match =
-      raw.match(/([\d.,]+)\s*%/);
-
-    if(!match){
-      return 0;
-    }
-
-    return parseFloat(
-      match[1].replace(',', '.')
-    );
-
-  });
-
-
-  // ==========================
-  // BUSCAR CANVAS
-  // ==========================
-
-  const canvas =
-    document.getElementById('growthChart');
-
-  if(!canvas){
-
-    console.warn(
-      'No se encontró growthChart'
-    );
-
-    return;
-
+  const statPlantas = document.getElementById('statPlantas');
+  if (statPlantas) {
+    statPlantas.textContent = total;
   }
 
-
-  // ==========================
-  // COMPROBAR CHART.JS
-  // ==========================
-
-  if(typeof Chart === 'undefined'){
-
-    console.error(
-      'Chart.js no está cargado'
-    );
-
-    return;
-
+  const statCategorias = document.getElementById('statCategorias');
+  if (statCategorias) {
+    statCategorias.textContent = labels.length;
   }
 
-
-  // ==========================
-  // ELIMINAR GRÁFICA ANTERIOR
-  // ==========================
-
-  if(growthChart){
-
-    growthChart.destroy();
-
-    growthChart = null;
-
-  }
-
-
-  // ==========================
-  // CREAR GRÁFICA
-  // ==========================
-
-  const ctx =
-    canvas.getContext('2d');
-
-  growthChart = new Chart(ctx, {
-
-    type: 'bar',
-
-    data: {
-
-      labels: labels,
-
-      datasets: [{
-
-        label: 'Cantidad de plantas',
-
-        data: counts,
-
-        backgroundColor: '#4C8C4A',
-
-        borderColor: '#1F4D36',
-
-        borderWidth: 1,
-
-        borderRadius: 5
-
-      }]
-
-    },
-
-
-    options: {
-
-      indexAxis: 'y',
-
-      responsive: true,
-
-      maintainAspectRatio: false,
-
-      animation: {
-
-        duration: 500
-
-      },
-
-
-      scales: {
-
-        x: {
-
-          beginAtZero: true,
-
-          title: {
-
-            display: true,
-
-            text: 'Número de plantas'
-
-          }
-
-        },
-
-
-        y: {
-
-          ticks: {
-
-            autoSkip: false
-
-          }
-
-        }
-
-      },
-
-
-      plugins: {
-
-        legend: {
-
-          display: false
-
-        },
-
-
-        tooltip: {
-
-          callbacks: {
-
-            label: function(context){
-
-              const porcentaje =
-                percents[
-                  context.dataIndex
-                ] || 0;
-
-              return (
-                context.raw +
-                ' plantas (' +
-                porcentaje +
-                '%)'
-              );
-
-            }
-
-          }
-
-        }
-
-      }
-
-    }
-
-  });
-
-
-  // ==========================
-  // ESTADÍSTICAS
-  // ==========================
-
-  const totalPlantas =
-    counts.reduce(
-      function(total, number){
-
-        return total + number;
-
-      },
-      0
-    );
-
-
-  const statPlantas =
-    document.getElementById(
-      'statPlantas'
-    );
-
-  if(statPlantas){
-
-    statPlantas.textContent =
-      totalPlantas;
-
-  }
-
-
-  const statCategorias =
-    document.getElementById(
-      'statCategorias'
-    );
-
-  if(statCategorias){
-
-    statCategorias.textContent =
-      rows.length;
-
-  }
-
-
-  // ==========================
-  // CATEGORÍA MÁS ABUNDANTE
-  // ==========================
+  if (!percents.length) return;
 
   let topIndex = 0;
 
-  percents.forEach(
-    function(percent, index){
+  percents.forEach((value, index) => {
+    if (value > percents[topIndex]) {
+      topIndex = index;
+    }
+  });
 
-      if(
-        percent >
-        percents[topIndex]
-      ){
+  const topName = (labels[topIndex] || 'Sin categoría')
+    .replace(/^\d+\.\s*/, '')
+    .split('–')[0]
+    .trim();
 
-        topIndex = index;
+  const statTop = document.getElementById('statTop');
+  if (statTop) {
+    statTop.textContent =
+      String(percents[topIndex]).replace('.', ',') + '%';
+  }
 
+  const statTopLabel = document.getElementById('statTopLabel');
+  if (statTopLabel) {
+    statTopLabel.textContent =
+      'categoría más abundante: ' + topName;
+  }
+}
+
+function buildChart() {
+  const canvas = document.getElementById('growthChart');
+
+  if (!canvas) {
+    console.warn('No se encontró el canvas #growthChart.');
+    return;
+  }
+
+  if (typeof Chart === 'undefined') {
+    console.error('Chart.js no está cargado.');
+    return;
+  }
+
+  const { labels, counts, percents } = readPlantData();
+
+  if (!labels.length) {
+    console.warn('No hay datos para la gráfica.');
+    return;
+  }
+
+  updateStats(labels, counts, percents);
+
+  if (growthChart) {
+    growthChart.destroy();
+    growthChart = null;
+  }
+
+  const ctx = canvas.getContext('2d');
+
+  growthChart = new Chart(ctx, {
+    type: 'bar',
+
+    data: {
+      labels: labels,
+
+      datasets: [{
+        label: 'Cantidad de plantas',
+        data: counts,
+        backgroundColor: '#4C8C4A',
+        borderColor: '#1F4D36',
+        borderWidth: 1,
+        borderRadius: 5
+      }]
+    },
+
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+
+      animation: {
+        duration: 500
+      },
+
+      scales: {
+        x: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Número de plantas'
+          }
+        },
+
+        y: {
+          ticks: {
+            autoSkip: false
+          }
+        }
+      },
+
+      plugins: {
+        legend: {
+          display: false
+        },
+
+        tooltip: {
+          callbacks: {
+            label: context => {
+              const percentage =
+                percents[context.dataIndex] || 0;
+
+              return `${context.raw} plantas (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+
+// ---------- agregar categoría ----------
+const addPlantRow = document.getElementById('addPlantRow');
+
+if (addPlantRow) {
+  addPlantRow.addEventListener('click', () => {
+    const tbody = document.querySelector('#plantTable tbody');
+
+    if (!tbody) return;
+
+    const tr = document.createElement('tr');
+
+    // La tabla de análisis tiene 4 columnas.
+    [
+      'Nueva categoría',
+      'Resumen de la categoría...',
+      'Flor: — Fruto: —',
+      '0 — 0,00 %'
+    ].forEach((text, index) => {
+      const td = document.createElement('td');
+
+      td.contentEditable = 'true';
+      td.textContent = text;
+
+      if (index === 3) {
+        td.classList.add('mono');
       }
 
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+
+    if (tr.children[0]) {
+      tr.children[0].focus();
     }
-  );
-
-
-  const topName =
-    labels[topIndex]
-      .replace(/^\d+\.\s*/, '')
-      .split('–')[0]
-      .trim();
-
-
-  const statTop =
-    document.getElementById(
-      'statTop'
-    );
-
-  if(statTop){
-
-    statTop.textContent =
-      percents[topIndex]
-        .toString()
-        .replace('.', ',') +
-      '%';
-
-  }
-
-
-  const statTopLabel =
-    document.getElementById(
-      'statTopLabel'
-    );
-
-  if(statTopLabel){
-
-    statTopLabel.textContent =
-      'categoría más abundante: ' +
-      topName;
-
-  }
-
-}
-
-
-// ==========================
-// BOTÓN ACTUALIZAR GRÁFICA
-// ==========================
-
-const recalcBtn =
-  document.getElementById(
-    'recalcBtn'
-  );
-
-if(recalcBtn){
-
-  recalcBtn.addEventListener(
-    'click',
-    buildChart
-  );
-
-}
-
-
-// ==========================
-// CARGAR GRÁFICA
-// ==========================
-
-window.addEventListener(
-  'load',
-  function(){
 
     buildChart();
+  });
+}
 
-  }
-);
+
+// ---------- actualizar gráfica ----------
+const recalcBtn = document.getElementById('recalcBtn');
+
+if (recalcBtn) {
+  recalcBtn.addEventListener('click', buildChart);
+}
 
 
-// ==========================
-// ACTUALIZAR AL EDITAR TABLA
-// ==========================
+// ---------- actualizar gráfica al editar ----------
+const plantBody = document.querySelector('#plantTable tbody');
 
-const plantBody =
-  document.querySelector(
-    '#plantTable tbody'
-  );
+if (plantBody) {
+  plantBody.addEventListener('blur', event => {
+    if (event.target.matches('td[contenteditable]')) {
+      buildChart();
+    }
+  }, true);
+}
 
-if(plantBody){
 
-  plantBody.addEventListener(
-    'blur',
-    function(event){
+// ---------- quiz: selección visual ----------
+document.querySelectorAll('.opt input[type=radio]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const group = document.querySelectorAll(
+      `input[name="${radio.name}"]`
+    );
 
-      if(
-        event.target.matches(
-          'td[contenteditable]'
-        )
-      ){
-
-        buildChart();
-
+    group.forEach(input => {
+      const option = input.closest('.opt');
+      if (option) {
+        option.classList.remove('selected');
       }
+    });
 
-    },
-    true
-  );
+    const selected = radio.closest('.opt');
 
-}
-
-// ---------- quiz option selection styling ----------
-document.querySelectorAll('.opt input[type=radio]').forEach(r => {
-  r.addEventListener('change', () => {
-    const group = document.querySelectorAll(`input[name="${r.name}"]`);
-    group.forEach(g => g.closest('.opt').classList.remove('selected'));
-    r.closest('.opt').classList.add('selected');
+    if (selected) {
+      selected.classList.add('selected');
+    }
   });
 });
 
-// ---------- quiz submit ----------
-document.getElementById('submitQuiz').addEventListener('click', () => {
-  const name = document.getElementById('qName').value.trim();
-  const grade = document.getElementById('qGrade').value.trim();
- const p1 = document.querySelector('input[name="p1"]:checked');
-const p2 = document.querySelector('input[name="p2"]:checked');
-const p3 = document.querySelector('input[name="p3"]:checked');
-const p4 = document.querySelector('input[name="p4"]:checked');
-const p5 = document.querySelector('input[name="p5"]:checked');
-const p6 = document.querySelector('input[name="p6"]:checked');
-const p7 = document.querySelector('input[name="p7"]:checked');
-const p8 = document.querySelector('input[name="p8"]:checked');
-const p9 = document.querySelector('input[name="p9"]:checked');
 
-const err = document.getElementById('quizError');
+// ---------- quiz ----------
+const submitQuiz = document.getElementById('submitQuiz');
 
-if(!name || !grade || !p1 || !p2 || !p3 || !p4 || !p5 || !p6 || !p7 || !p8 || !p9){
-  err.style.display = 'block';
-  return;
+if (submitQuiz) {
+  submitQuiz.addEventListener('click', () => {
+    const name =
+      document.getElementById('qName').value.trim();
+
+    const grade =
+      document.getElementById('qGrade').value.trim();
+
+    const answers = [];
+
+    for (let i = 1; i <= 9; i++) {
+      answers.push(
+        document.querySelector(
+          `input[name="p${i}"]:checked`
+        )
+      );
+    }
+
+    const err =
+      document.getElementById('quizError');
+
+    if (!name || !grade || answers.some(answer => !answer)) {
+      if (err) {
+        err.style.display = 'block';
+      }
+      return;
+    }
+
+    if (err) {
+      err.style.display = 'none';
+    }
+
+    const correct =
+      answers.filter(answer => answer.value === 'c').length;
+
+    const total = answers.length;
+
+    addToRegistro({
+      name,
+      grade,
+      correct,
+      total,
+      date: new Date().toLocaleString('es-CO', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      })
+    });
+
+    document.getElementById('thanksName').textContent =
+      `¡Gracias, ${name}!`;
+
+    document.getElementById('thanksScoreText').textContent =
+      `Respondiste correctamente ${correct} de ${total} preguntas (${grade}).`;
+
+    document.getElementById('shareLink').value =
+      window.location.href.split('#')[0] + '#participa';
+
+    document.getElementById('quizCard').style.display = 'none';
+    document.getElementById('thanksCard').style.display = 'block';
+  });
 }
 
-err.style.display = 'none';
 
-const answers = [p1, p2, p3, p4, p5, p6, p7, p8, p9];
+// ---------- intentar de nuevo ----------
+const tryAgain = document.getElementById('tryAgain');
 
-const correct = answers.filter(a => a.value === 'c').length;
-const total = answers.length;
+if (tryAgain) {
+  tryAgain.addEventListener('click', () => {
+    document.getElementById('quizCard').style.display = 'block';
+    document.getElementById('thanksCard').style.display = 'none';
 
-  addToRegistro({
-    name, grade, correct, total,
-    date: new Date().toLocaleString('es-CO', {dateStyle:'short', timeStyle:'short'})
+    document
+      .querySelectorAll('.opt input[type=radio]')
+      .forEach(radio => {
+        radio.checked = false;
+      });
+
+    document
+      .querySelectorAll('.opt')
+      .forEach(option => {
+        option.classList.remove('selected');
+      });
+
+    document.getElementById('qName').value = '';
+    document.getElementById('qGrade').value = '';
   });
-
-  document.getElementById('thanksName').textContent = `¡Gracias, ${name}!`;
-  document.getElementById('thanksScoreText').textContent = `Respondiste correctamente ${correct} de ${total} preguntas (${grade}).`;
-  document.getElementById('shareLink').value = window.location.href.split('#')[0] + '#participa';
-
-  document.getElementById('quizCard').style.display = 'none';
-  document.getElementById('thanksCard').style.display = 'block';
-});
-
-document.getElementById('tryAgain').addEventListener('click', () => {
-  document.getElementById('quizCard').style.display = 'block';
-  document.getElementById('thanksCard').style.display = 'none';
-  document.querySelectorAll('.opt input[type=radio]').forEach(r => r.checked = false);
-  document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
-  document.getElementById('qName').value = '';
-  document.getElementById('qGrade').value = '';
-});
-
-document.getElementById('copyLink').addEventListener('click', () => {
-  const field = document.getElementById('shareLink');
-  field.select();
-  navigator.clipboard?.writeText(field.value);
-  const btn = document.getElementById('copyLink');
-  const old = btn.textContent;
-  btn.textContent = '¡Copiado!';
-  setTimeout(() => btn.textContent = old, 1500);
-});
-
-// ---------- registro de participantes (nombre, grado, puntaje) ----------
-
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxx-2ZbSj0zRPB3JFIsMUbZJ3EA0egWiuFDh6WQ4wdY3TwEvS08V5tGkDl69UGzghbwPg/exec';
+}
 
 
-const REGISTRO_KEY = 'sanluisverde_registro';
-const useSharedRegistro = APPS_SCRIPT_URL.trim().startsWith('http');
+// ---------- copiar enlace ----------
+const copyLink = document.getElementById('copyLink');
+
+if (copyLink) {
+  copyLink.addEventListener('click', async () => {
+    const field = document.getElementById('shareLink');
+
+    if (!field) return;
+
+    field.select();
+
+    try {
+      await navigator.clipboard.writeText(field.value);
+    } catch (error) {
+      document.execCommand('copy');
+    }
+
+    const oldText = copyLink.textContent;
+    copyLink.textContent = '¡Copiado!';
+
+    setTimeout(() => {
+      copyLink.textContent = oldText;
+    }, 1500);
+  });
+}
+
+
+// ============================================================
+// REGISTRO DE PARTICIPANTES
+// ============================================================
+
+const APPS_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbxx-2ZbSj0zRPB3JFIsMUbZJ3EA0egWiuFDh6WQ4wdY3TwEvS08V5tGkDl69UGzghbwPg/exec';
+
+const REGISTRO_KEY =
+  'sanluisverde_registro';
+
+const useSharedRegistro =
+  APPS_SCRIPT_URL.trim().startsWith('http');
+
 let ultimoRegistroCargado = [];
 
-function getLocalRegistro(){
-  try { return JSON.parse(localStorage.getItem(REGISTRO_KEY)) || []; }
-  catch(e){ return []; }
+
+function getLocalRegistro() {
+  try {
+    return JSON.parse(
+      localStorage.getItem(REGISTRO_KEY)
+    ) || [];
+  } catch (error) {
+    return [];
+  }
 }
-function saveLocalRegistro(list){
-  try { localStorage.setItem(REGISTRO_KEY, JSON.stringify(list)); }
-  catch(e){ /* almacenamiento no disponible en este navegador */ }
+
+
+function saveLocalRegistro(list) {
+  try {
+    localStorage.setItem(
+      REGISTRO_KEY,
+      JSON.stringify(list)
+    );
+  } catch (error) {
+    console.warn(
+      'No se pudo guardar el registro local.',
+      error
+    );
+  }
 }
-function escapeHtml(str){
+
+
+function escapeHtml(value) {
   const div = document.createElement('div');
-  div.textContent = str;
+  div.textContent = String(value ?? '');
   return div.innerHTML;
 }
 
-async function addToRegistro(entry){
-  // respaldo local: siempre se guarda también en este dispositivo, aunque haya registro compartido
+
+async function addToRegistro(entry) {
   const local = getLocalRegistro();
+
   local.push(entry);
+
   saveLocalRegistro(local);
 
-  if(useSharedRegistro){
-    try{
-      await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(entry) });
-    } catch(e){
-      console.warn('No se pudo enviar al registro compartido; se guardó localmente.', e);
+  if (useSharedRegistro) {
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(entry)
+      });
+    } catch (error) {
+      console.warn(
+        'No se pudo enviar al registro compartido. Se guardó localmente.',
+        error
+      );
     }
   }
+
   await refreshRegistro();
 }
 
-function renderRegistro(list){
-  ultimoRegistroCargado = list;
-  const tbody = document.getElementById('registroBody');
-  const empty = document.getElementById('registroEmpty');
+
+function renderRegistro(list) {
+  ultimoRegistroCargado = Array.isArray(list)
+    ? list
+    : [];
+
+  const tbody =
+    document.getElementById('registroBody');
+
+  const empty =
+    document.getElementById('registroEmpty');
+
+  if (!tbody || !empty) return;
+
   tbody.innerHTML = '';
-  if(!list || list.length === 0){
+
+  if (!ultimoRegistroCargado.length) {
     empty.style.display = 'block';
     return;
   }
+
   empty.style.display = 'none';
-  list.forEach((entry, i) => {
+
+  ultimoRegistroCargado.forEach((entry, index) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${i + 1}</td><td>${escapeHtml(entry.name)}</td><td>${escapeHtml(entry.grade)}</td><td class="mono">${entry.correct} / ${entry.total}</td><td>${escapeHtml(entry.date)}</td>`;
+
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${escapeHtml(entry.name)}</td>
+      <td>${escapeHtml(entry.grade)}</td>
+      <td class="mono">
+        ${escapeHtml(entry.correct)} /
+        ${escapeHtml(entry.total)}
+      </td>
+      <td>${escapeHtml(entry.date)}</td>
+    `;
+
     tbody.appendChild(tr);
   });
 }
 
-async function refreshRegistro(){
+
+async function refreshRegistro() {
   let list;
-  if(useSharedRegistro){
-    try{
-      const res = await fetch(APPS_SCRIPT_URL);
-      list = await res.json();
-    } catch(e){
-      console.warn('No se pudo leer el registro compartido; mostrando el registro local.', e);
+
+  if (useSharedRegistro) {
+    try {
+      const response =
+        await fetch(APPS_SCRIPT_URL);
+
+      if (!response.ok) {
+        throw new Error(
+          `HTTP ${response.status}`
+        );
+      }
+
+      list = await response.json();
+    } catch (error) {
+      console.warn(
+        'No se pudo leer el registro compartido. Mostrando registro local.',
+        error
+      );
+
       list = getLocalRegistro();
     }
   } else {
     list = getLocalRegistro();
   }
+
   renderRegistro(list);
 }
 
-// mensaje de estado según si el registro compartido está configurado
-document.getElementById('registroDesc').textContent = useSharedRegistro
-  ? 'Nombre, grado y puntaje de quienes han respondido, desde cualquier celular conectado a internet.'
-  : 'Nombre, grado y puntaje de quienes han respondido en este dispositivo. Para verlo en varios celulares a la vez, configura el registro compartido (ver comentario al inicio de este bloque de código).';
 
-document.getElementById('refreshRegistroBtn').addEventListener('click', refreshRegistro);
+const registroDesc =
+  document.getElementById('registroDesc');
 
-// si hay registro compartido, se actualiza solo cada 15 segundos para ver las nuevas respuestas de otros celulares
-if(useSharedRegistro){
-  setInterval(refreshRegistro, 15000);
+if (registroDesc) {
+  registroDesc.textContent =
+    useSharedRegistro
+      ? 'Nombre, grado y puntaje de quienes han respondido, desde cualquier celular conectado a internet.'
+      : 'Nombre, grado y puntaje de quienes han respondido en este dispositivo.';
 }
 
-document.getElementById('clearRegistro').addEventListener('click', () => {
-  if(useSharedRegistro){
-    alert('El registro compartido vive en tu Google Sheet. Para borrarlo, elimina las filas directamente en la hoja de cálculo. Aquí solo borraremos la copia local de respaldo de este dispositivo.');
-  } else if(!confirm('¿Borrar todo el registro de participantes en este dispositivo? Esta acción no se puede deshacer.')){
-    return;
-  }
-  saveLocalRegistro([]);
-  if(!useSharedRegistro) renderRegistro([]);
-});
 
-document.getElementById('exportCsv').addEventListener('click', () => {
-  const list = ultimoRegistroCargado;
-  if(!list || list.length === 0) return;
-  let csv = 'Nombre,Grado,Puntaje,Total,Fecha\n';
-  list.forEach(entry => {
-    csv += `"${String(entry.name).replace(/"/g, '""')}","${String(entry.grade).replace(/"/g, '""')}",${entry.correct},${entry.total},"${entry.date}"\n`;
-  });
-  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'registro-san-luis-verde.csv';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-});
+const refreshRegistroBtn =
+  document.getElementById('refreshRegistroBtn');
 
-refreshRegistro();
+if (refreshRegistroBtn) {
+  refreshRegistroBtn.addEventListener(
+    'click',
+    refreshRegistro
+  );
+}
 
 
-document.querySelectorAll('.subtab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.subtarget;
+if (useSharedRegistro) {
+  setInterval(
+    refreshRegistro,
+    15000
+  );
+}
 
-    document.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b === btn));
-    document.querySelectorAll('.subview').forEach(v => v.classList.toggle('active', v.id === target));
 
-    if(target === 'vistaRegistro'){
-      refreshRegistro(); // trae los datos más recientes al entrar a esta vista
+const clearRegistro =
+  document.getElementById('clearRegistro');
+
+if (clearRegistro) {
+  clearRegistro.addEventListener('click', () => {
+
+    if (useSharedRegistro) {
+      alert(
+        'El registro compartido vive en tu Google Sheet. Para borrarlo, elimina las filas directamente en la hoja de cálculo. Aquí solo borraremos la copia local de respaldo de este dispositivo.'
+      );
+    } else {
+      const confirmed = confirm(
+        '¿Borrar todo el registro de participantes en este dispositivo? Esta acción no se puede deshacer.'
+      );
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    saveLocalRegistro([]);
+
+    if (!useSharedRegistro) {
+      renderRegistro([]);
     }
   });
+}
+
+
+const exportCsv =
+  document.getElementById('exportCsv');
+
+if (exportCsv) {
+  exportCsv.addEventListener('click', () => {
+
+    const list = ultimoRegistroCargado;
+
+    if (!list.length) return;
+
+    let csv =
+      'Nombre,Grado,Puntaje,Total,Fecha\n';
+
+    list.forEach(entry => {
+      csv +=
+        `"${String(entry.name).replace(/"/g, '""')}","${String(entry.grade).replace(/"/g, '""')}",${entry.correct},${entry.total},"${String(entry.date).replace(/"/g, '""')}"\n`;
+    });
+
+    const blob = new Blob(
+      ['\ufeff' + csv],
+      {
+        type: 'text/csv;charset=utf-8;'
+      }
+    );
+
+    const url =
+      URL.createObjectURL(blob);
+
+    const link =
+      document.createElement('a');
+
+    link.href = url;
+    link.download =
+      'registro-san-luis-verde.csv';
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(url);
+  });
+}
+
+
+// ---------- subpestañas de Participa ----------
+document.querySelectorAll('.subtab').forEach(button => {
+
+  button.addEventListener('click', () => {
+
+    const target =
+      button.dataset.subtarget;
+
+    document.querySelectorAll('.subtab').forEach(tab => {
+      tab.classList.toggle(
+        'active',
+        tab === button
+      );
+    });
+
+    document.querySelectorAll('.subview').forEach(view => {
+      view.classList.toggle(
+        'active',
+        view.id === target
+      );
+    });
+
+    if (target === 'vistaRegistro') {
+      refreshRegistro();
+    }
+  });
+
 });
 
+
+// ---------- carga inicial ----------
+window.addEventListener('load', () => {
+
+  // Inicio siempre es la primera sección.
+  showPanel('inicio');
+
+  // La gráfica se prepara después de cargar.
+  // Si está oculta, se volverá a dibujar al entrar en Análisis.
+  setTimeout(() => {
+    if (document.getElementById('analisis')?.classList.contains('active')) {
+      buildChart();
+    }
+  }, 200);
+
+  refreshRegistro();
+
+});
 </script>
+
 </body>
 </html>
