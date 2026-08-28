@@ -431,7 +431,7 @@
 
 <div class="card">
   <div style="overflow-x:auto;">
-    <table id="plantTable" class="wide-table">
+    <table id="plantTableDiagnostico" class="wide-table">
       <thead>
         <tr>
           <th>Categoría</th>
@@ -460,9 +460,14 @@
   </div>
 
   <div style="display:flex;gap:10px;margin-top:14px;">
-    <button class="add-row" id="addPlantRow" type="button">+ Agregar categoría</button>
-    <button class="btn-secondary" id="recalcBtn" type="button">Actualizar gráfica</button>
-  </div>
+  <button class="add-row" id="addPlantRow" type="button">
+    + Agregar categoría
+  </button>
+
+  <button class="btn-secondary" id="recalcBtn" type="button">
+    Actualizar gráfica
+  </button>
+</div>
 </div>  </section>
 
   <!-- ===================== 3. ANÁLISIS DE DATOS ===================== -->
@@ -976,15 +981,59 @@ const panels = document.querySelectorAll('.panel');
 const visited = new Set(['inicio']);
 
 function showPanel(id){
-  panels.forEach(p => p.classList.toggle('active', p.id === id));
+
+  panels.forEach(p =>
+    p.classList.toggle('active', p.id === id)
+  );
+
   steps.forEach(s => {
+
     const isActive = s.dataset.target === id;
+
     s.classList.toggle('active', isActive);
-    s.setAttribute('aria-selected', isActive ? 'true' : 'false');
+
+    s.setAttribute(
+      'aria-selected',
+      isActive ? 'true' : 'false'
+    );
+
   });
+
   visited.add(id);
-  steps.forEach(s => s.classList.toggle('done', visited.has(s.dataset.target) && s.dataset.target !== id));
-  window.scrollTo({top: document.querySelector('nav.sendero').offsetTop - 8, behavior:'smooth'});
+
+  steps.forEach(s =>
+    s.classList.toggle(
+      'done',
+      visited.has(s.dataset.target) &&
+      s.dataset.target !== id
+    )
+  );
+
+  window.scrollTo({
+    top: document.querySelector('nav.sendero').offsetTop - 8,
+    behavior:'smooth'
+  });
+
+
+  // =====================================
+  // SOLUCION: reconstruir la gráfica
+  // cuando Análisis de datos sea visible
+  // =====================================
+
+  if(id === 'analisis'){
+
+    setTimeout(() => {
+
+      buildChart();
+
+      if(growthChart){
+        growthChart.resize();
+      }
+
+    }, 100);
+
+  }
+
 }
 steps.forEach(s => s.addEventListener('click', () => showPanel(s.dataset.target)));
 
@@ -1005,70 +1054,218 @@ document.getElementById('addPlantRow').addEventListener('click', () => {
 });
 
 // ---------- chart: clasificación de plantas por categoría ----------
-let growthChart;
+let growthChart = null;
+
 function buildChart(){
-  const rows = [...document.querySelectorAll('#plantTable tbody tr')];
 
-  const labels = rows.map(r => r.children[0].textContent.trim());
-  const counts = rows.map(r => {
-    const raw = r.children[3].textContent.trim();
-    const match = raw.match(/[\d.,]+/); // primer número, ej. "16" de "16 — 2,06 %"
-    return match ? parseFloat(match[0].replace(',', '.')) : 0;
-  });
-  const percents = rows.map(r => {
-    const raw = r.children[2].textContent.trim();
-    const match = raw.match(/([\d.,]+)\s*%/); // número antes del símbolo %
-    return match ? parseFloat(match[1].replace(',', '.')) : 0;
-  });
+  const table = document.getElementById('plantTable');
 
-  if(growthChart) growthChart.destroy();
-  try {
-    const ctx = document.getElementById('growthChart').getContext('2d');
-    growthChart = new Chart(ctx, {
-      type:'bar',
-      data:{
-        labels,
-        datasets:[{
-          label:'Cantidad de plantas',
-          data: counts,
-          backgroundColor:'#4C8C4A',
-          borderRadius:5
-        }]
-      },
-      options:{
-        indexAxis:'y',
-        responsive:true,
-        maintainAspectRatio:false,
-        scales:{
-          x:{title:{display:true,text:'Número de plantas'}, beginAtZero:true},
-          y:{ticks:{autoSkip:false}}
-        },
-        plugins:{
-          legend:{display:false},
-          tooltip:{
-            callbacks:{
-              label: ctx => `${ctx.raw} plantas (${percents[ctx.dataIndex]}%)`
-            }
-          }
-        }
-      }
-    });
-  } catch(err){
-    console.warn('No se pudo dibujar la gráfica (¿Chart.js no cargó?). El resto de la página sigue funcionando.', err);
+  if(!table){
+    console.warn('No se encontró la tabla plantTable');
+    return;
   }
 
-  // ---- estadísticas dinámicas ----
-  const totalPlantas = counts.reduce((a,b) => a+b, 0);
-  document.getElementById('statPlantas').textContent = totalPlantas;
-  document.getElementById('statCategorias').textContent = rows.length;
+  const rows = [...table.querySelectorAll('tbody tr')];
+
+  if(rows.length === 0){
+    console.warn('La tabla no tiene filas');
+    return;
+  }
+
+  // Obtener nombres de las categorías
+  const labels = rows.map(r => {
+    return r.children[0]?.textContent.trim() || 'Sin categoría';
+  });
+
+  // Obtener cantidades
+  const counts = rows.map(r => {
+
+    const raw = r.children[3]?.textContent.trim() || '';
+
+    // Busca el primer número
+    const match = raw.match(/[\d.,]+/);
+
+    if(!match) return 0;
+
+    return parseFloat(
+      match[0]
+        .replace(/\./g, '')
+        .replace(',', '.')
+    );
+  });
+
+  // Obtener porcentajes
+  const percents = rows.map(r => {
+
+    // IMPORTANTE:
+    // Cantidad y % está en la cuarta columna = children[3]
+    const raw = r.children[3]?.textContent.trim() || '';
+
+    const match = raw.match(/([\d.,]+)\s*%/);
+
+    if(!match) return 0;
+
+    return parseFloat(
+      match[1].replace(',', '.')
+    );
+  });
+
+
+  // Si ya existe una gráfica, destruirla
+  if(growthChart){
+    growthChart.destroy();
+    growthChart = null;
+  }
+
+
+  const canvas = document.getElementById('growthChart');
+
+  if(!canvas){
+    console.warn('No se encontró el canvas growthChart');
+    return;
+  }
+
+
+  const ctx = canvas.getContext('2d');
+
+  growthChart = new Chart(ctx, {
+
+    type: 'bar',
+
+    data: {
+
+      labels: labels,
+
+      datasets: [{
+
+        label: 'Cantidad de plantas',
+
+        data: counts,
+
+        backgroundColor: '#4C8C4A',
+
+        borderRadius: 5
+
+      }]
+
+    },
+
+    options: {
+
+      indexAxis: 'y',
+
+      responsive: true,
+
+      maintainAspectRatio: false,
+
+      animation: {
+        duration: 700
+      },
+
+      scales: {
+
+        x: {
+
+          beginAtZero: true,
+
+          title: {
+
+            display: true,
+
+            text: 'Número de plantas'
+
+          }
+
+        },
+
+        y: {
+
+          ticks: {
+
+            autoSkip: false
+
+          }
+
+        }
+
+      },
+
+      plugins: {
+
+        legend: {
+
+          display: false
+
+        },
+
+        tooltip: {
+
+          callbacks: {
+
+            label: function(context){
+
+              const porcentaje =
+                percents[context.dataIndex] || 0;
+
+              return `${context.raw} plantas (${porcentaje}%)`;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  });
+
+
+  // ==========================
+  // ESTADÍSTICAS
+  // ==========================
+
+  const totalPlantas =
+    counts.reduce((a,b) => a + b, 0);
+
+  document.getElementById('statPlantas').textContent =
+    totalPlantas;
+
+  document.getElementById('statCategorias').textContent =
+    rows.length;
+
 
   let topIndex = 0;
-  percents.forEach((p, i) => { if(p > percents[topIndex]) topIndex = i; });
-  const topName = labels[topIndex].replace(/^\d+\.\s*/, '').split('–')[0].trim();
-  document.getElementById('statTop').textContent = percents[topIndex].toString().replace('.', ',') + '%';
-  document.getElementById('statTopLabel').textContent = 'categoría más abundante: ' + topName;
-}
-document.getElementById('recalcBtn').addEventListener('click', buildChart);
+
+  percents.forEach((p,i) => {
+
+    if(p > percents[topIndex]){
+
+      topIndex = i;
+
+    }
+
+  });
+
+
+  const topName =
+    labels[topIndex]
+      .replace(/^\d+\.\s*/, '')
+      .split('–')[0]
+      .trim();
+
+
+  document.getElementById('statTop').textContent =
+    percents[topIndex]
+      .toString()
+      .replace('.', ',') + '%';
+
+
+  document.getElementById('statTopLabel').textContent =
+    'categoría más abundante: ' + topName;
+
+}document.getElementById('recalcBtn').addEventListener('click', buildChart);
 window.addEventListener('load', buildChart);
  setTimeout(buildChart, 500);
 
