@@ -561,7 +561,7 @@
     </div>
 
 <div class="chart-wrap">
-    <canvas id="growthChart" height="420"></canvas>
+  <canvas id="growthChart" height="420"></canvas>
 </div>
    <h3 style="font-size:1.05rem;margin:26px 0 10px;">
   Clasificación de las plantas
@@ -1056,13 +1056,9 @@ const panels = document.querySelectorAll('.panel');
 const visited = new Set(['inicio']);
 
 function showPanel(id){
-
-  panels.forEach(p =>
-    p.classList.toggle('active', p.id === id)
-  );
+  panels.forEach(p => p.classList.toggle('active', p.id === id));
 
   steps.forEach(s => {
-
     const isActive = s.dataset.target === id;
 
     s.classList.toggle('active', isActive);
@@ -1071,7 +1067,6 @@ function showPanel(id){
       'aria-selected',
       isActive ? 'true' : 'false'
     );
-
   });
 
   visited.add(id);
@@ -1083,6 +1078,19 @@ function showPanel(id){
       s.dataset.target !== id
     )
   );
+
+  window.scrollTo({
+    top: document.querySelector('nav.sendero').offsetTop - 8,
+    behavior:'smooth'
+  });
+}
+
+steps.forEach(s =>
+  s.addEventListener(
+    'click',
+    () => showPanel(s.dataset.target)
+  )
+);
 
   window.scrollTo({
     top: document.querySelector('nav.sendero').offsetTop - 8,
@@ -1129,6 +1137,7 @@ document.getElementById('addPlantRow').addEventListener('click', () => {
 });
 
 // ---------- chart: clasificación de plantas por categoría ----------
+
 let growthChart = null;
 
 function buildChart(){
@@ -1136,23 +1145,30 @@ function buildChart(){
   const table = document.getElementById('plantTable');
 
   if(!table){
-    console.warn('No se encontró la tabla plantTable');
+    console.warn('No se encontró plantTable');
     return;
   }
 
-  const rows = [...table.querySelectorAll('tbody tr')];
+  const rows = [
+    ...table.querySelectorAll('tbody tr')
+  ];
 
   if(rows.length === 0){
-    console.warn('La tabla no tiene filas');
+    console.warn('No hay filas en plantTable');
     return;
   }
+
 
   // ==========================
   // CATEGORÍAS
   // ==========================
 
-  const labels = rows.map(r => {
-    return r.children[0]?.textContent.trim() || 'Sin categoría';
+  const labels = rows.map(function(row){
+
+    return row.children[0]
+      ? row.children[0].textContent.trim()
+      : 'Sin categoría';
+
   });
 
 
@@ -1160,15 +1176,24 @@ function buildChart(){
   // CANTIDADES
   // ==========================
 
-  const counts = rows.map(r => {
+  const counts = rows.map(function(row){
+
+    const cell =
+      row.children[3];
+
+    if(!cell){
+      return 0;
+    }
 
     const raw =
-      r.children[3]?.textContent.trim() || '';
+      cell.textContent.trim();
 
     const match =
       raw.match(/[\d.,]+/);
 
-    if(!match) return 0;
+    if(!match){
+      return 0;
+    }
 
     return parseFloat(
       match[0]
@@ -1183,15 +1208,24 @@ function buildChart(){
   // PORCENTAJES
   // ==========================
 
-  const percents = rows.map(r => {
+  const percents = rows.map(function(row){
+
+    const cell =
+      row.children[3];
+
+    if(!cell){
+      return 0;
+    }
 
     const raw =
-      r.children[3]?.textContent.trim() || '';
+      cell.textContent.trim();
 
     const match =
       raw.match(/([\d.,]+)\s*%/);
 
-    if(!match) return 0;
+    if(!match){
+      return 0;
+    }
 
     return parseFloat(
       match[1].replace(',', '.')
@@ -1201,7 +1235,7 @@ function buildChart(){
 
 
   // ==========================
-  // CANVAS
+  // BUSCAR CANVAS
   // ==========================
 
   const canvas =
@@ -1210,14 +1244,33 @@ function buildChart(){
   if(!canvas){
 
     console.warn(
-      'No se encontró el canvas growthChart'
+      'No se encontró growthChart'
     );
 
     return;
+
   }
 
 
-  // Destruir gráfica anterior
+  // ==========================
+  // COMPROBAR CHART.JS
+  // ==========================
+
+  if(typeof Chart === 'undefined'){
+
+    console.error(
+      'Chart.js no está cargado'
+    );
+
+    return;
+
+  }
+
+
+  // ==========================
+  // ELIMINAR GRÁFICA ANTERIOR
+  // ==========================
+
   if(growthChart){
 
     growthChart.destroy();
@@ -1227,13 +1280,12 @@ function buildChart(){
   }
 
 
-  const ctx =
-    canvas.getContext('2d');
-
-
   // ==========================
   // CREAR GRÁFICA
   // ==========================
+
+  const ctx =
+    canvas.getContext('2d');
 
   growthChart = new Chart(ctx, {
 
@@ -1269,6 +1321,12 @@ function buildChart(){
       responsive: true,
 
       maintainAspectRatio: false,
+
+      animation: {
+
+        duration: 500
+
+      },
 
 
       scales: {
@@ -1317,7 +1375,9 @@ function buildChart(){
             label: function(context){
 
               const porcentaje =
-                percents[context.dataIndex] || 0;
+                percents[
+                  context.dataIndex
+                ] || 0;
 
               return (
                 context.raw +
@@ -1345,13 +1405,19 @@ function buildChart(){
 
   const totalPlantas =
     counts.reduce(
-      (a,b) => a + b,
+      function(total, number){
+
+        return total + number;
+
+      },
       0
     );
 
 
   const statPlantas =
-    document.getElementById('statPlantas');
+    document.getElementById(
+      'statPlantas'
+    );
 
   if(statPlantas){
 
@@ -1362,7 +1428,9 @@ function buildChart(){
 
 
   const statCategorias =
-    document.getElementById('statCategorias');
+    document.getElementById(
+      'statCategorias'
+    );
 
   if(statCategorias){
 
@@ -1378,18 +1446,20 @@ function buildChart(){
 
   let topIndex = 0;
 
+  percents.forEach(
+    function(percent, index){
 
-  percents.forEach((p,i) => {
+      if(
+        percent >
+        percents[topIndex]
+      ){
 
-    if(
-      p > percents[topIndex]
-    ){
+        topIndex = index;
 
-      topIndex = i;
+      }
 
     }
-
-  });
+  );
 
 
   const topName =
@@ -1400,7 +1470,9 @@ function buildChart(){
 
 
   const statTop =
-    document.getElementById('statTop');
+    document.getElementById(
+      'statTop'
+    );
 
   if(statTop){
 
@@ -1414,7 +1486,9 @@ function buildChart(){
 
 
   const statTopLabel =
-    document.getElementById('statTopLabel');
+    document.getElementById(
+      'statTopLabel'
+    );
 
   if(statTopLabel){
 
@@ -1428,11 +1502,13 @@ function buildChart(){
 
 
 // ==========================
-// ACTUALIZAR GRÁFICA
+// BOTÓN ACTUALIZAR GRÁFICA
 // ==========================
 
 const recalcBtn =
-  document.getElementById('recalcBtn');
+  document.getElementById(
+    'recalcBtn'
+  );
 
 if(recalcBtn){
 
@@ -1445,17 +1521,21 @@ if(recalcBtn){
 
 
 // ==========================
-// AL CARGAR LA PÁGINA
+// CARGAR GRÁFICA
 // ==========================
 
 window.addEventListener(
   'load',
-  buildChart
+  function(){
+
+    buildChart();
+
+  }
 );
 
 
 // ==========================
-// AL EDITAR LA TABLA
+// ACTUALIZAR AL EDITAR TABLA
 // ==========================
 
 const plantBody =
@@ -1467,10 +1547,10 @@ if(plantBody){
 
   plantBody.addEventListener(
     'blur',
-    function(e){
+    function(event){
 
       if(
-        e.target.matches(
+        event.target.matches(
           'td[contenteditable]'
         )
       ){
@@ -1484,31 +1564,6 @@ if(plantBody){
   );
 
 }
-
-  const topName =
-    labels[topIndex]
-      .replace(/^\d+\.\s*/, '')
-      .split('–')[0]
-      .trim();
-
-
-  document.getElementById('statTop').textContent =
-    percents[topIndex]
-      .toString()
-      .replace('.', ',') + '%';
-
-
-  document.getElementById('statTopLabel').textContent =
-    'categoría más abundante: ' + topName;
-
-}document.getElementById('recalcBtn').addEventListener('click', buildChart);
-window.addEventListener('load', buildChart);
- setTimeout(buildChart, 500);
-
-// recalcular automáticamente al terminar de editar una celda de la tabla
-document.querySelector('#plantTable tbody').addEventListener('blur', e => {
-  if(e.target.matches('td[contenteditable]')) buildChart();
-}, true);
 
 // ---------- quiz option selection styling ----------
 document.querySelectorAll('.opt input[type=radio]').forEach(r => {
