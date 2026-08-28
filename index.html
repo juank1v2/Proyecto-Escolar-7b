@@ -1070,6 +1070,7 @@ function buildChart(){
 }
 document.getElementById('recalcBtn').addEventListener('click', buildChart);
 window.addEventListener('load', buildChart);
+ setTimeout(buildChart, 500);
 
 // recalcular automáticamente al terminar de editar una celda de la tabla
 document.querySelector('#plantTable tbody').addEventListener('blur', e => {
