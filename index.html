@@ -1,7 +1,4 @@
-
-
-Index · HTML
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -45,7 +42,8 @@ Index · HTML
   img{max-width:100%;display:block;}
   button{font-family:inherit;}
   :focus-visible{outline:3px solid var(--lime); outline-offset:2px;}
- 
+
+  /* decorative leaf svg */
   .leaf-bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;opacity:.5;}
   .leaf-bg svg{position:absolute;}
   @media (prefers-reduced-motion:no-preference){
@@ -55,7 +53,8 @@ Index · HTML
       50%{transform:rotate(3deg);}
     }
   }
- 
+
+  /* header / hero  */
   header.hero{
     position:relative;
     background:
@@ -99,7 +98,8 @@ Index · HTML
     font-size:1rem;
   }
   .hero-leaf{position:absolute;right:-40px;top:-20px;width:280px;opacity:.9;}
- 
+
+  /*  nav / sendero  */
   nav.sendero{
     position:sticky;top:0;z-index:20;
     background:var(--paper);
@@ -135,16 +135,17 @@ Index · HTML
   .step.active{color:var(--forest-dark);border-bottom-color:var(--leaf);background:var(--sage);}
   .step.active .num{background:var(--leaf);color:#fff;}
   .step.done .num::after{content:'✓';}
- 
+
+  /*  main layout  */
   main{max-width:1000px;margin:0 auto;padding:44px 24px 90px;position:relative;z-index:1;}
   section.panel{display:none;}
   section.panel.active{display:block;animation:fadein .45s ease;}
   @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
- 
+
   .section-head{margin-bottom:28px;}
   .section-head .eyebrow{color:var(--leaf);}
   .section-head .eyebrow::before{background:var(--leaf);}
- 
+
   .card{
     background:var(--paper);
     border:1px solid var(--line);
@@ -154,7 +155,7 @@ Index · HTML
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
   @media (max-width:720px){.grid2,.grid3{grid-template-columns:1fr;}}
- 
+
   .tag{
     display:inline-block;
     font-family:'Space Mono',monospace;
@@ -165,7 +166,8 @@ Index · HTML
     margin-bottom:8px;
   }
   .tag.warn{background:#FBEFE4;color:var(--soil);border-color:#EAD9C4;}
- 
+
+  /*  photo upload slots  */
   .photo-slot{
     border:2px dashed var(--line);
     border-radius:14px;
@@ -188,7 +190,8 @@ Index · HTML
     border:none;border-bottom:1px solid var(--line);
     background:transparent;width:100%;padding:4px 2px;font-family:inherit;
   }
- 
+
+  /*  static photo cards (fotos agregadas desde el código)  */
   .photo-card{
     background:#fff;border:1px solid var(--line);border-radius:14px;
     padding:10px;
@@ -200,6 +203,7 @@ Index · HTML
   .photo-card .photo-caption{
     margin-top:8px;font-size:.85rem;color:var(--ink-soft);border:none;padding:0;text-align:center;
   }
+  /* Si el archivo de la foto todavía no existe, se muestra este aviso en vez de una imagen rota */
   .photo-card.photo-missing{position:relative;}
   .photo-card.photo-missing img{opacity:0;}
   .photo-card.photo-missing::before{
@@ -209,7 +213,8 @@ Index · HTML
     display:flex;align-items:center;justify-content:center;text-align:center;
     font-size:.8rem;color:var(--ink-soft);padding:12px;background:var(--sage);
   }
- 
+
+  /*  img-frame: foto con marco redondeado y aviso si el archivo aún no existe  */
   .img-frame{
     position:relative;width:100%;aspect-ratio:4/3;
     border-radius:12px;overflow:hidden;margin-bottom:12px;background:var(--sage);
@@ -221,7 +226,8 @@ Index · HTML
     position:absolute;inset:0;border:2px dashed var(--line);background:var(--sage);
   }
   .img-frame.wide{aspect-ratio:16/9;}
- 
+
+  /*  lists / tables  */
   table{width:100%;border-collapse:collapse;font-size:.92rem;}
   th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);}
   th{font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);font-weight:700;}
@@ -238,93 +244,19 @@ Index · HTML
   .add-row{margin-top:12px;background:var(--sage);border:1px dashed var(--leaf-light);color:var(--forest-dark);
     padding:9px 16px;border-radius:10px;font-weight:600;cursor:pointer;font-size:.85rem;}
   .add-row:hover{background:#DEEAD3;}
- 
+
+  /*  stats strip  */
   .stat{
     background:var(--forest);color:var(--paper);
     border-radius:14px;padding:18px 20px;
   }
   .stat .num{font-family:'Space Mono',monospace;font-size:1.7rem;font-weight:700;color:var(--lime);}
   .stat .label{font-size:.8rem;color:#CBDCC3;margin-top:2px;}
- 
-.chart-wrap{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:22px;
-  min-height:480px;
-  overflow:hidden;
-}
- 
-#plantChart{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
- 
-.chart-row{
-  display:grid;
-  grid-template-columns:190px 1fr 70px;
-  align-items:center;
-  gap:12px;
-}
- 
-.chart-label{
-  font-size:.78rem;
-  color:var(--ink);
-  text-align:right;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
- 
-.chart-bar-area{
-  width:100%;
-  height:24px;
-  background:#EAF1E4;
-  border-radius:7px;
-  overflow:hidden;
-}
- 
-.chart-bar{
-  height:100%;
-  background:#4C8C4A;
-  border-radius:7px;
-  min-width:2px;
-  transition:width .5s ease;
-}
- 
-.chart-value{
-  font-family:'Space Mono',monospace;
-  font-size:.75rem;
-  color:var(--forest);
-  white-space:nowrap;
-}
- 
-.chart-title{
-  font-family:'Fraunces',serif;
-  font-size:1rem;
-  color:var(--forest-dark);
-  margin-bottom:8px;
-}
- 
-@media(max-width:720px){
- 
-  .chart-row{
-    grid-template-columns:120px 1fr 55px;
-    gap:8px;
-  }
- 
-  .chart-label{
-    font-size:.68rem;
-  }
- 
-  .chart-value{
-    font-size:.68rem;
-  }
- 
-}
- 
+
+  .chart-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;height:480px;}
+  .chart-wrap canvas{max-height:100%;}
+
+  /*  tech cards  */
   .tech-card{
     background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;
     display:flex;flex-direction:column;gap:6px;
@@ -339,7 +271,8 @@ Index · HTML
     font-size:.82rem;color:var(--soil);background:#FBEFE4;border:1px solid #EAD9C4;
     padding:10px 14px;border-radius:10px;margin-top:14px;
   }
- 
+
+  /* ---------- form / quiz ---------- */
   .quiz-field{margin-bottom:18px;}
   .quiz-field label{display:block;font-weight:600;margin-bottom:6px;font-size:.92rem;}
   .quiz-field input[type=text]{
@@ -355,7 +288,7 @@ Index · HTML
   .opt:hover{border-color:var(--leaf-light);}
   .opt input{accent-color:var(--leaf);}
   .opt.selected{border-color:var(--leaf);background:var(--sage);}
- 
+
   .btn-primary{
     background:var(--leaf);color:#fff;border:none;padding:13px 28px;border-radius:12px;
     font-weight:700;font-size:.95rem;cursor:pointer;transition:background .2s, transform .1s;
@@ -367,7 +300,7 @@ Index · HTML
     padding:11px 22px;border-radius:12px;font-weight:600;cursor:pointer;font-size:.9rem;
   }
   .btn-secondary:hover{background:var(--sage);}
- 
+
   .thanks{
     text-align:center;padding:36px 20px;
   }
@@ -379,7 +312,8 @@ Index · HTML
   .link-box input{
     flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font-family:'Space Mono',monospace;font-size:.8rem;background:#fff;
   }
- 
+
+  /*  QR poster block  */
   .qr-block{
     margin-top:26px;
     background:var(--forest);color:var(--paper);border-radius:18px;
@@ -398,11 +332,12 @@ Index · HTML
     background:#193C29;color:#fff;font-family:'Space Mono',monospace;font-size:.78rem;margin-bottom:10px;
   }
   .qr-url-field::placeholder{color:#8DA98F;}
- 
+
   footer{
     text-align:center;padding:26px;color:var(--ink-soft);font-size:.8rem;
   }
- 
+
+  /*  sub-pestañas dentro de Participa (quiz / registro)  */
   .subtabs{
     display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;
   }
@@ -415,36 +350,15 @@ Index · HTML
   .subtab.active{background:var(--leaf);color:#fff;border-color:var(--leaf);}
   .subview{display:none;}
   .subview.active{display:block;animation:fadein .35s ease;}
- 
-.chart-wrap{
-  position:relative;
-  width:100%;
-  height:520px;
-  min-height:520px;
-}
- 
-.chart-wrap canvas{
-  display:block;
-  width:100% !important;
-  height:100% !important;
-}
- 
-@media(max-width:720px){
-  .chart-wrap{
-    height:620px;
-    min-height:620px;
-  }
-}
- 
 </style>
 </head>
 <body>
- 
+
 <div class="leaf-bg" aria-hidden="true">
   <svg class="sway" style="top:70px;left:-30px;width:160px;opacity:.35" viewBox="0 0 100 100"><path d="M50 10 C 80 25, 85 60, 50 90 C 15 60, 20 25, 50 10 Z" fill="#4C8C4A"/></svg>
   <svg class="sway" style="top:340px;right:-40px;width:200px;opacity:.25" viewBox="0 0 100 100"><path d="M50 10 C 80 25, 85 60, 50 90 C 15 60, 20 25, 50 10 Z" fill="#1F4D36"/></svg>
 </div>
- 
+
 <header class="hero">
   <svg class="hero-leaf sway" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8 C 85 22, 90 62, 50 92 C 10 62, 15 22, 50 8 Z" fill="#2E6B48"/><path d="M50 15 L50 85" stroke="#1F4D36" stroke-width="2" opacity=".5"/></svg>
   <div class="hero-inner">
@@ -454,7 +368,7 @@ Index · HTML
     <p class="desc">Basura, plantas dañadas y poca información sobre las especies del colegio. Un proyecto estudiantil que indaga, mide y propone soluciones tecnológicas para recuperar estos espacios.</p>
   </div>
 </header>
- 
+
 <nav class="sendero">
   <div class="sendero-track" role="tablist" aria-label="Secciones del proyecto">
     <button class="step active" data-target="inicio" role="tab" aria-selected="true"><span class="num">1</span> Inicio</button>
@@ -464,9 +378,10 @@ Index · HTML
     <button class="step" data-target="participa" role="tab" aria-selected="false"><span class="num">5</span> Participa</button>
   </div>
 </nav>
- 
+
 <main>
- 
+
+  <!--  1. INICIO  -->
   <section class="panel active" id="inicio">
     <div class="section-head">
       <div class="eyebrow">01 · De qué trata el proyecto</div>
@@ -494,7 +409,7 @@ Index · HTML
       <span class="tag">Objetivo general</span>
       <p style="margin:0;">Diagnosticar las zonas verdes del colegio y diseñar una solución tecnológica sencilla que facilite su cuidado y promueva la conciencia ambiental.</p>
     </div>
- 
+
     <div class="qr-block">
       <div class="qr-img-wrap"><img src="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=https%3A%2F%2Fjuank1v2.github.io%2FProyecto_Escolar_septimo-B%2FProyecto%2520San%2520Luis%2520%252B%2520Verde%2520con%2520el%2520Mundo%2520Digital.pdf" alt="Código QR hacia el PDF del proyecto San Luis + Verde"></div>
       <div class="qr-text">
@@ -503,211 +418,119 @@ Index · HTML
       </div>
     </div>
   </section>
- 
+
+   <!--  2. INDAGACIÓN-->
   <section class="panel" id="indagacion">
     <div class="section-head">
       <div class="eyebrow">02 · Trabajo de campo</div>
       <h2>Indagación y diagnóstico</h2>
       <p style="color:var(--ink-soft);max-width:60ch;">Fotos del recorrido: lo que encontramos, clasificamos y lo que hay que mejorar.</p>
     </div>
- 
-  <h3 style="font-size:1.05rem;margin:26px 0 10px;">Clasificación de las plantas</h3>
- 
-<div class="card">
-  <div style="overflow-x:auto;">
-    <table id="plantTableDiagnostico" class="wide-table">
-      <thead>
-        <tr>
-          <th>Categoría</th>
-          <th>Característica</th>
-          <th>Cantidad y %</th>
-        </tr>
-      </thead>
- 
-      <tbody>
-        <tr><td contenteditable="true">Myrtaceae – feijoa</td><td contenteditable="true">Árbol de hojas aromáticas.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
-        <tr><td contenteditable="true">Piperaceae</td><td contenteditable="true">Hojas simples y flores en espigas.</td><td contenteditable="true" class="mono">16 — 2,06 %</td></tr>
-        <tr><td contenteditable="true">Melastomataceae</td><td contenteditable="true">Hojas con nervaduras marcadas.</td><td contenteditable="true" class="mono">1 — 0,13 %</td></tr>
-        <tr><td contenteditable="true">Fabaceae</td><td contenteditable="true">Familia de las leguminosas.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
-        <tr><td contenteditable="true">Pinaceae – pino</td><td contenteditable="true">Hojas en forma de aguja.</td><td contenteditable="true" class="mono">13 — 1,68 %</td></tr>
-        <tr><td contenteditable="true">Rubiaceae</td><td contenteditable="true">Incluye el café.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
-        <tr><td contenteditable="true">Solanaceae</td><td contenteditable="true">Incluye tomate y papa.</td><td contenteditable="true" class="mono">12 — 1,55 %</td></tr>
-        <tr><td contenteditable="true">Rosaceae – rosa</td><td contenteditable="true">Incluye rosas y fresas.</td><td contenteditable="true" class="mono">10 — 1,29 %</td></tr>
-        <tr><td contenteditable="true">Rutaceae</td><td contenteditable="true">Familia de los cítricos.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
-        <tr><td contenteditable="true">Asteraceae</td><td contenteditable="true">Incluye margaritas y girasoles.</td><td contenteditable="true" class="mono">14 — 1,81 %</td></tr>
-        <tr><td contenteditable="true">Fabaceae – muestra 2</td><td contenteditable="true">Otra muestra de Fabaceae.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
-        <tr><td contenteditable="true">Cannaceae – achira</td><td contenteditable="true">Hojas grandes y flores vistosas.</td><td contenteditable="true" class="mono">100 — 12,90 %</td></tr>
-        <tr><td contenteditable="true">Mimosa (Fabaceae)</td><td contenteditable="true">Hojas con muchos folíolos.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
-        <tr><td contenteditable="true">Asparagaceae</td><td contenteditable="true">Hojas largas o en roseta.</td><td contenteditable="true" class="mono">5 — 0,65 %</td></tr>
-      </tbody>
-    </table>
-  </div>
- 
-  <div style="display:flex;gap:10px;margin-top:14px;">
-  <button class="add-row" id="addPlantRowDiag" type="button">
-    + Agregar categoría
-  </button>
-</div>
-</div>  </section>
- 
+
+     <h3 style="font-size:1.05rem;margin-bottom:10px;">Recorrido fotográfico</h3>
+    <div class="grid3" id="photoGrid">
+      <div class="photo-card">
+        <img src="Fotos/grupo 1.jpg" alt="Entrada / fachada verde" onerror="this.closest('.photo-card').classList.add('photo-missing')">
+        <p class="photo-caption">primera foto</p>
+      </div>
+      <div class="photo-card">
+        <img src="Fotos/grupo 2.jpeg" alt="Jardín con basura" onerror="this.closest('.photo-card').classList.add('photo-missing')">
+        <p class="photo-caption">segunda foto</p>
+      </div>
+      <div class="photo-card">
+        <img src="Fotos/grupo 3.jpeg" alt="Planta dañada" onerror="this.closest('.photo-card').classList.add('photo-missing')">
+        <p class="photo-caption">tercera foto</p>
+      </div>
+      <div class="photo-card">
+        <img src="Fotos/grupo 4.jpeg" alt="Zona sin cuidado" onerror="this.closest('.photo-card').classList.add('photo-missing')">
+        <p class="photo-caption">cuarta foto</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin:30px 0 10px;">Problemas encontrados</h3>
+    <div class="grid3">
+      <div class="card">
+        <div class="img-frame">
+          <img src="Fotos/basura.jpg" alt="Basura acumulada" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback">📷 Agrega Fotos/basura.jpg</div>
+        </div>
+        <span class="tag warn">Basura</span><p style="margin:0;font-size:.9rem;">Residuos acumulados en jardineras y zonas de descanso.</p>
+      </div>
+      <div class="card">
+        <div class="img-frame">
+          <img src="Fotos/plantas_dañadas.jpg" alt="Planta dañada" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback">📷 Agrega Fotos/plantas_danadas.jpg</div>
+        </div>
+        <span class="tag warn">Plantas dañadas</span><p style="margin:0;font-size:.9rem;">Hojas secas, tallos rotos y suelo pisoteado.</p>
+      </div>
+      <div class="card">
+        <div class="img-frame">
+          <img src="Fotos/falta_riego.jpg" alt="Falta de riego" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback">📷 Agrega Fotos/falta_riego.jpg</div>
+        </div>
+        <span class="tag warn">Falta de riego</span><p style="margin:0;font-size:.9rem;">Sin horario ni responsable fijo de riego.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3. ANÁLISIS DE DATOS ===================== -->
   <section class="panel" id="analisis">
     <div class="section-head">
       <div class="eyebrow">03 · Con lo aprendido en matemáticas</div>
       <h2>Análisis de datos</h2>
       <p style="color:var(--ink-soft);max-width:60ch;">Clasificación por familia botánica: cantidad y porcentaje de cada categoría registrada.</p>
     </div>
- 
+
     <div class="grid3" style="margin-bottom:22px;">
       <div class="stat"><div class="num" id="statPlantas">186</div><div class="label">plantas clasificadas</div></div>
       <div class="stat"><div class="num" id="statCategorias">14</div><div class="label">familias / categorías identificadas</div></div>
       <div class="stat"><div class="num" id="statTop">12,90%</div><div class="label" id="statTopLabel">categoría más abundante: Cannaceae</div></div>
     </div>
- 
-<div class="chart-wrap">
-  <canvas id="growthChart" height="420"></canvas>
-</div>
-   <h3 style="font-size:1.05rem;margin:26px 0 10px;">
-  Clasificación de las plantas
-</h3>
- 
-<div class="card">
- 
-  <p style="margin:0 0 14px;font-size:.85rem;color:var(--ink-soft);">
-    Edita una celda y actualiza la gráfica.
-  </p>
- 
-  <div style="overflow-x:auto;">
-    <table id="plantTable" class="wide-table">
- 
-      <thead>
-        <tr>
-          <th>Categoría</th>
-          <th>Características</th>
-          <th>Flor y fruto</th>
-          <th>Cantidad y %</th>
-        </tr>
-      </thead>
- 
-      <tbody>
- 
-        <tr>
-          <td contenteditable="true">1. Myrtaceae – feijoa</td>
-          <td contenteditable="true">Árbol o arbusto de hojas aromáticas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">3 — 0,39 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">2. Piperaceae</td>
-          <td contenteditable="true">Hojas simples y flores en espigas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">16 — 2,06 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">3. Melastomataceae</td>
-          <td contenteditable="true">Hojas con nervaduras marcadas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">1 — 0,13 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">4. Fabaceae – muestra 1</td>
-          <td contenteditable="true">Familia de las leguminosas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: vaina.</td>
-          <td contenteditable="true" class="mono">3 — 0,39 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">5. Pinaceae – pino</td>
-          <td contenteditable="true">Hojas en forma de aguja.</td>
-          <td contenteditable="true">Sin flores ni frutos verdaderos.</td>
-          <td contenteditable="true" class="mono">13 — 1,68 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">6. Rubiaceae</td>
-          <td contenteditable="true">Hojas opuestas. Incluye el café.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">2 — 0,26 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">7. Solanaceae</td>
-          <td contenteditable="true">Incluye tomate, papa y pimentón.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">12 — 1,55 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">8. Rosaceae – rosa</td>
-          <td contenteditable="true">Incluye rosas, fresas y manzanas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">10 — 1,29 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">9. Rutaceae</td>
-          <td contenteditable="true">Familia de los cítricos.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">2 — 0,26 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">10. Asteraceae</td>
-          <td contenteditable="true">Muchas flores pequeñas forman un capítulo.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">14 — 1,81 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">11. Fabaceae – muestra 2</td>
-          <td contenteditable="true">Otra muestra de Fabaceae.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">2 — 0,26 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">12. Cannaceae – achira</td>
-          <td contenteditable="true">Hojas grandes y flores vistosas.</td>
-          <td contenteditable="true">Flor: sí. Fruto: cápsula.</td>
-          <td contenteditable="true" class="mono">100 — 12,90 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">13. Mimosa (Fabaceae)</td>
-          <td contenteditable="true">Hojas con muchos folíolos.</td>
-          <td contenteditable="true">Flor: sí. Fruto: vaina.</td>
-          <td contenteditable="true" class="mono">3 — 0,39 %</td>
-        </tr>
- 
-        <tr>
-          <td contenteditable="true">14. Asparagaceae</td>
-          <td contenteditable="true">Hojas largas o en roseta.</td>
-          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
-          <td contenteditable="true" class="mono">5 — 0,65 %</td>
-        </tr>
- 
-      </tbody>
-    </table>
-  </div>
- 
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
- 
-    <button class="add-row" id="addPlantRow" type="button">
-      + Agregar categoría
-    </button>
- 
-    <button class="btn-secondary" id="recalcBtn" type="button">
-      Actualizar gráfica
-    </button>
- 
-  </div>
- 
-</div>
+
+    <div class="chart-wrap">
+      <canvas id="growthChart" height="420"></canvas>
+    </div>
+
+    <h3 style="font-size:1.05rem;margin:26px 0 10px;">Clasificación de las plantas</h3>
+    <div class="card">
+      <p style="margin:0 0 14px;font-size:.85rem;color:var(--ink-soft);">Toca una celda para editarla; la gráfica se actualiza sola.</p>
+      <div style="overflow-x:auto;">
+      <table id="plantTable" class="wide-table">
+        <thead>
+          <tr>
+            <th style="min-width:170px;">Categoría</th>
+            <th style="min-width:260px;">Resumen para el proyecto</th>
+            <th style="min-width:170px;">Flor y fruto</th>
+            <th style="min-width:110px;">Cantidad y %</th>
+            <th style="min-width:260px;">Pregunta y respuesta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td contenteditable="true">1. Myrtaceae – feijoa</td><td contenteditable="true">Son árboles o arbustos con hojas resistentes y generalmente aromáticas. La feijoa produce flores vistosas y un fruto verde comestible.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿Qué fruto se observó? La feijoa.</td></tr>
+          <tr><td contenteditable="true">2. Piperaceae</td><td contenteditable="true">Incluye plantas como la pimienta. Presenta hojas simples y pequeñas flores agrupadas en estructuras parecidas a espigas.</td><td contenteditable="true">Flor: sí. Fruto: sí, generalmente pequeño.</td><td contenteditable="true" class="mono">16 — 2,06 %</td><td contenteditable="true">¿Cómo se agrupan sus flores? En espigas.</td></tr>
+          <tr><td contenteditable="true">3. Melastomataceae</td><td contenteditable="true">Sus hojas suelen tener varias nervaduras longitudinales muy marcadas. Muchas especies producen flores llamativas y frutos pequeños.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">1 — 0,13 %</td><td contenteditable="true">¿Cómo se reconoce su hoja? Por sus nervaduras longitudinales marcadas.</td></tr>
+          <tr><td contenteditable="true">4. Fabaceae – muestra 1</td><td contenteditable="true">Es la familia de los fríjoles, arvejas y leguminosas. Sus hojas suelen ser compuestas y su fruto característico es la vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí, en forma de vaina.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿Cuál es su fruto característico? La vaina o legumbre.</td></tr>
+          <tr><td contenteditable="true">5. Pinaceae – pino</td><td contenteditable="true">Son árboles con hojas delgadas en forma de aguja. Producen conos o piñas en los que se encuentran sus semillas.</td><td contenteditable="true">Flor verdadera: no. Fruto verdadero: no. Produce conos y semillas.</td><td contenteditable="true" class="mono">13 — 1,68 %</td><td contenteditable="true">¿El pino produce frutos? No; produce conos con semillas.</td></tr>
+          <tr><td contenteditable="true">6. Rubiaceae</td><td contenteditable="true">Sus hojas generalmente crecen de manera opuesta. Incluye plantas como el café y puede producir flores tubulares y frutos carnosos.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Qué planta conocida pertenece a esta familia? El café.</td></tr>
+          <tr><td contenteditable="true">7. Solanaceae</td><td contenteditable="true">Incluye tomate, papa, pimentón y algunas plantas ornamentales. Sus flores pueden tener forma de estrella y sus frutos pueden ser bayas o cápsulas.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">12 — 1,55 %</td><td contenteditable="true">¿Qué alimento pertenece a Solanaceae? El tomate, la papa o el pimentón.</td></tr>
+          <tr><td contenteditable="true">8. Rosaceae – rosa</td><td contenteditable="true">Incluye rosas, fresas, manzanas y duraznos. Sus hojas suelen tener bordes dentados y muchas flores presentan cinco pétalos.</td><td contenteditable="true">Flor: sí. Fruto: sí; depende de la especie.</td><td contenteditable="true" class="mono">10 — 1,29 %</td><td contenteditable="true">¿Qué planta representó esta familia? La rosa.</td></tr>
+          <tr><td contenteditable="true">9. Rutaceae</td><td contenteditable="true">Es la familia de los cítricos, como la naranja y el limón. Sus hojas presentan sustancias aromáticas y pequeñas glándulas con aceites.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Por qué sus hojas pueden ser aromáticas? Porque contienen aceites naturales.</td></tr>
+          <tr><td contenteditable="true">10. Asteraceae</td><td contenteditable="true">Lo que parece una sola flor está formado por muchas flores pequeñas reunidas en un capítulo. Incluye margaritas y girasoles.</td><td contenteditable="true">Flor: sí. Fruto: sí, pequeño y seco.</td><td contenteditable="true" class="mono">14 — 1,81 %</td><td contenteditable="true">¿Una margarita es una sola flor? No; reúne muchas flores pequeñas.</td></tr>
+          <tr><td contenteditable="true">11. Fabaceae – muestra 2 (leguminosa)</td><td contenteditable="true">Es otra muestra de la misma familia Fabaceae. Puede tener hojas compuestas, flores de diferentes formas y frutos en vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Fabaceae y leguminosa son familias diferentes? No; corresponden al mismo grupo.</td></tr>
+          <tr><td contenteditable="true">12. Cannaceae – achira</td><td contenteditable="true">La achira posee hojas grandes, anchas y con nervaduras paralelas. Sus flores son vistosas y su fruto es una cápsula que contiene semillas.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">100 — 12,90 %</td><td contenteditable="true">¿Cuál fue la categoría más abundante? Cannaceae, con 100 plantas.</td></tr>
+          <tr><td contenteditable="true">13. Mimosa (Fabaceae)</td><td contenteditable="true">Tiene hojas compuestas por muchos folíolos pequeños. Algunas especies cierran sus hojas cuando se tocan y producen flores agrupadas y frutos en vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿A qué familia pertenece Mimosa? A Fabaceae.</td></tr>
+          <tr><td contenteditable="true">14. Asparagaceae</td><td contenteditable="true">Incluye plantas ornamentales con hojas largas, firmes o agrupadas en roseta. Produce flores y frutos en forma de baya o cápsula, según la especie.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">5 — 0,65 %</td><td contenteditable="true">¿Qué forma pueden tener sus hojas? Largas, firmes o agrupadas en roseta.</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <button class="add-row" id="addPlantRow" type="button">+ Agregar categoría</button>
+        <button class="btn-secondary" id="recalcBtn" type="button">Actualizar gráfica</button>
+      </div>
+    </div>
   </section>
- 
-  <section class="panel" id="soluciones">
+
+ <section class="panel" id="soluciones">
     <div class="section-head">
       <div class="eyebrow">04 · Lo que investigamos y usamos</div>
       <h2>Soluciones tecnológicas</h2>
@@ -765,13 +588,15 @@ Index · HTML
     </div>
   </section>
  
+
+  <!-- ===================== 5. PARTICIPA (formulario / juego) ===================== -->
   <section class="panel" id="participa">
     <div class="section-head">
       <div class="eyebrow">05 · Para los visitantes de la exposición</div>
       <h2>Participa en San Luis + Verde</h2>
       <p style="color:var(--ink-soft);max-width:60ch;">Escribe tu nombre y grado, responde el quiz y ayúdanos a difundir la conciencia ambiental.</p>
     </div>
- 
+
     <div class="grid3" style="margin-bottom:22px;">
       <div class="img-frame">
         <img src="Fotos/planta_dañada_participa1.jpg" alt="Estudiantes en la exposición" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -787,12 +612,12 @@ Index · HTML
       </div>
     </div>
  
- 
+
     <div class="subtabs" role="tablist" aria-label="Vistas de Participa">
       <button class="subtab active" data-subtarget="vistaQuiz" type="button">📝 Responder el quiz</button>
       <button class="subtab" data-subtarget="vistaRegistro" type="button">📋 Ver registro de respuestas</button>
     </div>
- 
+
     <div id="vistaQuiz" class="subview active">
     <div class="card" id="quizCard">
       <div class="quiz-field">
@@ -803,7 +628,7 @@ Index · HTML
         <label for="qGrade">Grado</label>
         <input type="text" id="qGrade" placeholder="Ej: 8°A">
       </div>
- 
+
       <div class="quiz-field">
         <label>1. ¿Cuál es la pregunta que guía el proyecto San Luis + Verde?</label>
         <div class="options" data-q="1">
@@ -812,7 +637,7 @@ Index · HTML
           <label class="opt"><input type="radio" name="p1" value="w2">¿Cómo se construye un robot?</label>
         </div>
       </div>
- 
+
       <div class="quiz-field">
         <label>2. ¿Cuál de estos NO es un problema encontrado en el diagnóstico?</label>
         <div class="options" data-q="2">
@@ -821,7 +646,7 @@ Index · HTML
           <label class="opt"><input type="radio" name="p2" value="c">Exceso de árboles nativos sanos</label>
         </div>
       </div>
- 
+
       <div class="quiz-field">
         <label>3. ¿Qué tipo de solución tecnológica propone el proyecto para cuidar las plantas?</label>
         <div class="options" data-q="3">
@@ -830,179 +655,185 @@ Index · HTML
           <label class="opt"><input type="radio" name="p3" value="w2">Cerrar las zonas verdes al público</label>
         </div>
       </div>
- 
+
+      <!-- PREGUNTA 4 -->
 <div class="quiz-field">
   <label>4. ¿Cuál fue la categoría más abundante?</label>
   <div class="options" data-q="4">
- 
+
     <label class="opt">
       <input type="radio" name="p4" value="c">
       Cannaceae, con 100 ejemplares y el 12,90 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p4" value="w1">
       Pinaceae, con 13 ejemplares y el 1,68 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p4" value="w2">
       Asteraceae, con 14 ejemplares y el 1,81 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p4" value="w3">
       Piperaceae, con 16 ejemplares y el 2,06 %.
     </label>
- 
+
   </div>
 </div>
- 
- 
+
+
+<!-- PREGUNTA 5 -->
 <div class="quiz-field">
   <label>5. ¿Cuál fue la categoría menos abundante?</label>
   <div class="options" data-q="5">
- 
+
     <label class="opt">
       <input type="radio" name="p5" value="w1">
       Cannaceae, con 100 ejemplares y el 12,90 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p5" value="w2">
       Pinaceae, con 13 ejemplares y el 1,68 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p5" value="w3">
       Asparagaceae, con 5 ejemplares y el 0,65 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p5" value="c">
       Melastomataceae, con 1 ejemplar y el 0,13 %.
     </label>
- 
+
   </div>
 </div>
- 
- 
+
+
+<!-- PREGUNTA 6 -->
 <div class="quiz-field">
   <label>6. ¿Qué porcentaje representan las 186 plantas estudiadas respecto de las 775 plantas del colegio?</label>
   <div class="options" data-q="6">
- 
+
     <label class="opt">
       <input type="radio" name="p6" value="w1">
       El 12 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p6" value="w2">
       El 18 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p6" value="w3">
       El 30 %.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p6" value="c">
       El 24 %.
     </label>
- 
+
   </div>
 </div>
- 
- 
+
+
+<!-- PREGUNTA 7 -->
 <div class="quiz-field">
   <label>7. ¿Cuál es la única familia del proyecto que no produce flores ni frutos verdaderos?</label>
   <div class="options" data-q="7">
- 
+
     <label class="opt">
       <input type="radio" name="p7" value="w1">
       Fabaceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p7" value="w2">
       Cannaceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p7" value="w3">
       Asteraceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p7" value="c">
       Pinaceae.
     </label>
- 
+
   </div>
 </div>
- 
- 
+
+
+<!-- PREGUNTA 8 -->
 <div class="quiz-field">
   <label>8. ¿A qué familia pertenece la Mimosa?</label>
   <div class="options" data-q="8">
- 
+
     <label class="opt">
       <input type="radio" name="p8" value="w1">
       Rosaceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p8" value="w2">
       Solanaceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p8" value="w3">
       Asteraceae.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p8" value="c">
       Fabaceae.
     </label>
- 
+
   </div>
 </div>
- 
- 
+
+
+<!-- PREGUNTA 9 -->
 <div class="quiz-field">
   <label>9. Si se agrupan las dos muestras de Fabaceae y Mimosa, ¿cuántos ejemplares hay?</label>
   <div class="options" data-q="9">
- 
+
     <label class="opt">
       <input type="radio" name="p9" value="w1">
       5 ejemplares.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p9" value="w2">
       6 ejemplares.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p9" value="w3">
       10 ejemplares.
     </label>
- 
+
     <label class="opt">
       <input type="radio" name="p9" value="c">
       8 ejemplares, equivalentes aproximadamente al 1,03 % del total del colegio.
     </label>
- 
+
   </div>
 </div>
       
- 
+
       <button class="btn-primary" id="submitQuiz" type="button">Enviar respuestas</button>
       <p id="quizError" style="color:#B5502F;font-size:.85rem;display:none;margin-top:10px;">Por favor completa tu nombre, grado y las nueve preguntas.</p>
     </div>
- 
+
     <div class="card thanks" id="thanksCard" style="display:none;">
       <svg class="big-leaf" viewBox="0 0 100 100"><path d="M50 8 C 85 22, 90 62, 50 92 C 10 62, 15 22, 50 8 Z" fill="#4C8C4A"/></svg>
       <h2 id="thanksName">¡Gracias por participar!</h2>
@@ -1015,7 +846,7 @@ Index · HTML
       <button class="btn-secondary" id="tryAgain" type="button" style="margin-top:16px;">Responder de nuevo</button>
     </div>
     </div>
- 
+
     <div id="vistaRegistro" class="subview">
     <div class="card" id="registroCard" style="margin-top:24px;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
@@ -1039,791 +870,315 @@ Index · HTML
     </div>
     </div>
   </section>
- 
+
 </main>
- 
+
 <footer>San Luis + Verde · Proyecto escolar de indagación ambiental</footer>
- 
- 
+
 <script>
-// ============================================================
-// SAN LUIS + VERDE — JAVASCRIPT COMPLETO Y CORREGIDO
-// ============================================================
- 
-// ---------- navegación principal ----------
+// ---------- tab navigation ----------
 const steps = document.querySelectorAll('.step');
 const panels = document.querySelectorAll('.panel');
 const visited = new Set(['inicio']);
- 
-function showPanel(id) {
-  panels.forEach(panel => {
-    panel.classList.toggle('active', panel.id === id);
+
+function showPanel(id){
+  panels.forEach(p => p.classList.toggle('active', p.id === id));
+  steps.forEach(s => {
+    const isActive = s.dataset.target === id;
+    s.classList.toggle('active', isActive);
+    s.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
- 
-  steps.forEach(step => {
-    const active = step.dataset.target === id;
-    step.classList.toggle('active', active);
-    step.setAttribute('aria-selected', active ? 'true' : 'false');
-  });
- 
   visited.add(id);
- 
-  steps.forEach(step => {
-    step.classList.toggle(
-      'done',
-      visited.has(step.dataset.target) &&
-      step.dataset.target !== id
-    );
-  });
- 
-  const nav = document.querySelector('nav.sendero');
- 
-  if (nav) {
-    window.scrollTo({
-      top: Math.max(0, nav.offsetTop - 8),
-      behavior: 'smooth'
-    });
-  }
- 
-  // La gráfica se dibuja solamente cuando la sección ya es visible.
-  if (id === 'analisis') {
-    setTimeout(() => {
-      buildChart();
-      if (growthChart) {
-        growthChart.resize();
-      }
-    }, 150);
-  }
+  steps.forEach(s => s.classList.toggle('done', visited.has(s.dataset.target) && s.dataset.target !== id));
+  window.scrollTo({top: document.querySelector('nav.sendero').offsetTop - 8, behavior:'smooth'});
 }
- 
-steps.forEach(step => {
-  step.addEventListener('click', () => {
-    showPanel(step.dataset.target);
+steps.forEach(s => s.addEventListener('click', () => showPanel(s.dataset.target)));
+
+// ---------- add plant category row ----------
+document.getElementById('addPlantRow').addEventListener('click', () => {
+  const tbody = document.querySelector('#plantTable tbody');
+  const tr = document.createElement('tr');
+  ['Nueva categoría','Resumen de la categoría...','Flor: — Fruto: —','0 — 0,00 %','¿Pregunta? Respuesta.'].forEach((text, i) => {
+    const td = document.createElement('td');
+    td.contentEditable = 'true';
+    td.textContent = text;
+    if(i === 3) td.classList.add('mono');
+    tr.appendChild(td);
   });
+  tbody.appendChild(tr);
+  tr.children[0].focus();
+  buildChart();
 });
- 
- 
-// ---------- gráfica ----------
-let growthChart = null;
- 
-function readPlantData() {
-  const table = document.getElementById('plantTable');
- 
-  if (!table) {
-    return { labels: [], counts: [], percents: [] };
-  }
- 
-  const rows = [...table.querySelectorAll('tbody tr')];
- 
-  const labels = [];
-  const counts = [];
-  const percents = [];
- 
-  rows.forEach(row => {
-    if (row.children.length < 4) return;
- 
-    const label = row.children[0].textContent.trim();
-    const raw = row.children[3].textContent.trim();
- 
-    // La celda tiene el formato: 100 — 12,90 %
-    const numberMatch = raw.match(/^\s*([\d.]+(?:,\d+)?)/);
-    const percentMatch = raw.match(/([\d.,]+)\s*%/);
- 
-    let count = numberMatch
-      ? parseFloat(numberMatch[1].replace(/\./g, '').replace(',', '.'))
-      : 0;
- 
-    let percent = percentMatch
-      ? parseFloat(percentMatch[1].replace(',', '.'))
-      : 0;
- 
-    if (!Number.isFinite(count)) count = 0;
-    if (!Number.isFinite(percent)) percent = 0;
- 
-    labels.push(label || 'Sin categoría');
-    counts.push(count);
-    percents.push(percent);
+
+// ---------- chart: clasificación de plantas por categoría ----------
+let growthChart;
+function buildChart(){
+  const rows = [...document.querySelectorAll('#plantTable tbody tr')];
+
+  const labels = rows.map(r => r.children[0].textContent.trim());
+  const counts = rows.map(r => {
+    const raw = r.children[3].textContent.trim();
+    const match = raw.match(/[\d.,]+/); // primer número, ej. "16" de "16 — 2,06 %"
+    return match ? parseFloat(match[0].replace(',', '.')) : 0;
   });
- 
-  return { labels, counts, percents };
-}
- 
-function updateStats(labels, counts, percents) {
-  const total = counts.reduce((sum, value) => sum + value, 0);
- 
-  const statPlantas = document.getElementById('statPlantas');
-  if (statPlantas) {
-    statPlantas.textContent = total;
-  }
- 
-  const statCategorias = document.getElementById('statCategorias');
-  if (statCategorias) {
-    statCategorias.textContent = labels.length;
-  }
- 
-  if (!percents.length) return;
- 
-  let topIndex = 0;
- 
-  percents.forEach((value, index) => {
-    if (value > percents[topIndex]) {
-      topIndex = index;
-    }
+  const percents = rows.map(r => {
+    const raw = r.children[3].textContent.trim();
+    const match = raw.match(/([\d.,]+)\s*%/); // número antes del símbolo %
+    return match ? parseFloat(match[1].replace(',', '.')) : 0;
   });
- 
-  const topName = (labels[topIndex] || 'Sin categoría')
-    .replace(/^\d+\.\s*/, '')
-    .split('–')[0]
-    .trim();
- 
-  const statTop = document.getElementById('statTop');
-  if (statTop) {
-    statTop.textContent =
-      String(percents[topIndex]).replace('.', ',') + '%';
-  }
- 
-  const statTopLabel = document.getElementById('statTopLabel');
-  if (statTopLabel) {
-    statTopLabel.textContent =
-      'categoría más abundante: ' + topName;
-  }
-}
- 
-function buildChart() {
-  const canvas = document.getElementById('growthChart');
- 
-  if (!canvas) {
-    console.warn('No se encontró el canvas #growthChart.');
-    return;
-  }
- 
-  if (typeof Chart === 'undefined') {
-    console.error('Chart.js no está cargado.');
-    return;
-  }
- 
-  const { labels, counts, percents } = readPlantData();
- 
-  if (!labels.length) {
-    console.warn('No hay datos para la gráfica.');
-    return;
-  }
- 
-  updateStats(labels, counts, percents);
- 
-  if (growthChart) {
-    growthChart.destroy();
-    growthChart = null;
-  }
- 
-  const ctx = canvas.getContext('2d');
- 
-  growthChart = new Chart(ctx, {
-    type: 'bar',
- 
-    data: {
-      labels: labels,
- 
-      datasets: [{
-        label: 'Cantidad de plantas',
-        data: counts,
-        backgroundColor: '#4C8C4A',
-        borderColor: '#1F4D36',
-        borderWidth: 1,
-        borderRadius: 5
-      }]
-    },
- 
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
- 
-      animation: {
-        duration: 500
+
+  if(growthChart) growthChart.destroy();
+  try {
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    growthChart = new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels,
+        datasets:[{
+          label:'Cantidad de plantas',
+          data: counts,
+          backgroundColor:'#4C8C4A',
+          borderRadius:5
+        }]
       },
- 
-      scales: {
-        x: {
-          beginAtZero: true,
-          title: {
-            display: true,
-            text: 'Número de plantas'
-          }
+      options:{
+        indexAxis:'y',
+        responsive:true,
+        maintainAspectRatio:false,
+        scales:{
+          x:{title:{display:true,text:'Número de plantas'}, beginAtZero:true},
+          y:{ticks:{autoSkip:false}}
         },
- 
-        y: {
-          ticks: {
-            autoSkip: false
-          }
-        }
-      },
- 
-      plugins: {
-        legend: {
-          display: false
-        },
- 
-        tooltip: {
-          callbacks: {
-            label: context => {
-              const percentage =
-                percents[context.dataIndex] || 0;
- 
-              return `${context.raw} plantas (${percentage}%)`;
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label: ctx => `${ctx.raw} plantas (${percents[ctx.dataIndex]}%)`
             }
           }
         }
       }
-    }
-  });
-}
- 
- 
-// ---------- agregar categoría (tabla de Análisis) ----------
-const addPlantRow = document.getElementById('addPlantRow');
- 
-if (addPlantRow) {
-  addPlantRow.addEventListener('click', () => {
-    const tbody = document.querySelector('#plantTable tbody');
- 
-    if (!tbody) return;
- 
-    const tr = document.createElement('tr');
- 
-    // La tabla de análisis tiene 4 columnas.
-    [
-      'Nueva categoría',
-      'Resumen de la categoría...',
-      'Flor: — Fruto: —',
-      '0 — 0,00 %'
-    ].forEach((text, index) => {
-      const td = document.createElement('td');
- 
-      td.contentEditable = 'true';
-      td.textContent = text;
- 
-      if (index === 3) {
-        td.classList.add('mono');
-      }
- 
-      tr.appendChild(td);
     });
- 
-    tbody.appendChild(tr);
- 
-    if (tr.children[0]) {
-      tr.children[0].focus();
-    }
- 
-    buildChart();
-  });
+  } catch(err){
+    console.warn('No se pudo dibujar la gráfica (¿Chart.js no cargó?). El resto de la página sigue funcionando.', err);
+  }
+
+  // ---- estadísticas dinámicas ----
+  const totalPlantas = counts.reduce((a,b) => a+b, 0);
+  document.getElementById('statPlantas').textContent = totalPlantas;
+  document.getElementById('statCategorias').textContent = rows.length;
+
+  let topIndex = 0;
+  percents.forEach((p, i) => { if(p > percents[topIndex]) topIndex = i; });
+  const topName = labels[topIndex].replace(/^\d+\.\s*/, '').split('–')[0].trim();
+  document.getElementById('statTop').textContent = percents[topIndex].toString().replace('.', ',') + '%';
+  document.getElementById('statTopLabel').textContent = 'categoría más abundante: ' + topName;
 }
- 
-// ---------- agregar categoría (tabla de Indagación / diagnóstico) ----------
-// Antes esta tabla usaba id="addPlantRow", duplicado con el botón de la
-// tabla de Análisis. Los id duplicados son inválidos en HTML: el navegador
-// solo "ve" el primero, así que el segundo botón quedaba sin funcionar.
-// Ahora tiene su propio id (addPlantRowDiag) y agrega filas a SU propia tabla.
-const addPlantRowDiag = document.getElementById('addPlantRowDiag');
- 
-if (addPlantRowDiag) {
-  addPlantRowDiag.addEventListener('click', () => {
-    const tbody = document.querySelector('#plantTableDiagnostico tbody');
- 
-    if (!tbody) return;
- 
-    const tr = document.createElement('tr');
- 
-    // Esta tabla tiene 3 columnas.
-    [
-      'Nueva categoría',
-      'Característica...',
-      '0 — 0,00 %'
-    ].forEach((text, index) => {
-      const td = document.createElement('td');
- 
-      td.contentEditable = 'true';
-      td.textContent = text;
- 
-      if (index === 2) {
-        td.classList.add('mono');
-      }
- 
-      tr.appendChild(td);
-    });
- 
-    tbody.appendChild(tr);
- 
-    if (tr.children[0]) {
-      tr.children[0].focus();
-    }
-  });
-}
- 
- 
-// ---------- actualizar gráfica ----------
-const recalcBtn = document.getElementById('recalcBtn');
- 
-if (recalcBtn) {
-  recalcBtn.addEventListener('click', buildChart);
-}
- 
- 
-// ---------- actualizar gráfica al editar ----------
-const plantBody = document.querySelector('#plantTable tbody');
- 
-if (plantBody) {
-  plantBody.addEventListener('blur', event => {
-    if (event.target.matches('td[contenteditable]')) {
-      buildChart();
-    }
-  }, true);
-}
- 
- 
-// ---------- quiz: selección visual ----------
-document.querySelectorAll('.opt input[type=radio]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    const group = document.querySelectorAll(
-      `input[name="${radio.name}"]`
-    );
- 
-    group.forEach(input => {
-      const option = input.closest('.opt');
-      if (option) {
-        option.classList.remove('selected');
-      }
-    });
- 
-    const selected = radio.closest('.opt');
- 
-    if (selected) {
-      selected.classList.add('selected');
-    }
+document.getElementById('recalcBtn').addEventListener('click', buildChart);
+window.addEventListener('load', buildChart);
+
+// recalcular automáticamente al terminar de editar una celda de la tabla
+document.querySelector('#plantTable tbody').addEventListener('blur', e => {
+  if(e.target.matches('td[contenteditable]')) buildChart();
+}, true);
+
+// ---------- quiz option selection styling ----------
+document.querySelectorAll('.opt input[type=radio]').forEach(r => {
+  r.addEventListener('change', () => {
+    const group = document.querySelectorAll(`input[name="${r.name}"]`);
+    group.forEach(g => g.closest('.opt').classList.remove('selected'));
+    r.closest('.opt').classList.add('selected');
   });
 });
- 
- 
-// ---------- quiz ----------
-const submitQuiz = document.getElementById('submitQuiz');
- 
-if (submitQuiz) {
-  submitQuiz.addEventListener('click', () => {
-    const name =
-      document.getElementById('qName').value.trim();
- 
-    const grade =
-      document.getElementById('qGrade').value.trim();
- 
-    const answers = [];
- 
-    for (let i = 1; i <= 9; i++) {
-      answers.push(
-        document.querySelector(
-          `input[name="p${i}"]:checked`
-        )
-      );
-    }
- 
-    const err =
-      document.getElementById('quizError');
- 
-    if (!name || !grade || answers.some(answer => !answer)) {
-      if (err) {
-        err.style.display = 'block';
-      }
-      return;
-    }
- 
-    if (err) {
-      err.style.display = 'none';
-    }
- 
-    const correct =
-      answers.filter(answer => answer.value === 'c').length;
- 
-    const total = answers.length;
- 
-    addToRegistro({
-      name,
-      grade,
-      correct,
-      total,
-      date: new Date().toLocaleString('es-CO', {
-        dateStyle: 'short',
-        timeStyle: 'short'
-      })
-    });
- 
-    document.getElementById('thanksName').textContent =
-      `¡Gracias, ${name}!`;
- 
-    document.getElementById('thanksScoreText').textContent =
-      `Respondiste correctamente ${correct} de ${total} preguntas (${grade}).`;
- 
-    document.getElementById('shareLink').value =
-      window.location.href.split('#')[0] + '#participa';
- 
-    document.getElementById('quizCard').style.display = 'none';
-    document.getElementById('thanksCard').style.display = 'block';
-  });
+
+// ---------- quiz submit ----------
+document.getElementById('submitQuiz').addEventListener('click', () => {
+  const name = document.getElementById('qName').value.trim();
+  const grade = document.getElementById('qGrade').value.trim();
+ const p1 = document.querySelector('input[name="p1"]:checked');
+const p2 = document.querySelector('input[name="p2"]:checked');
+const p3 = document.querySelector('input[name="p3"]:checked');
+const p4 = document.querySelector('input[name="p4"]:checked');
+const p5 = document.querySelector('input[name="p5"]:checked');
+const p6 = document.querySelector('input[name="p6"]:checked');
+const p7 = document.querySelector('input[name="p7"]:checked');
+const p8 = document.querySelector('input[name="p8"]:checked');
+const p9 = document.querySelector('input[name="p9"]:checked');
+
+const err = document.getElementById('quizError');
+
+if(!name || !grade || !p1 || !p2 || !p3 || !p4 || !p5 || !p6 || !p7 || !p8 || !p9){
+  err.style.display = 'block';
+  return;
 }
- 
- 
-// ---------- intentar de nuevo ----------
-const tryAgain = document.getElementById('tryAgain');
- 
-if (tryAgain) {
-  tryAgain.addEventListener('click', () => {
-    document.getElementById('quizCard').style.display = 'block';
-    document.getElementById('thanksCard').style.display = 'none';
- 
-    document
-      .querySelectorAll('.opt input[type=radio]')
-      .forEach(radio => {
-        radio.checked = false;
-      });
- 
-    document
-      .querySelectorAll('.opt')
-      .forEach(option => {
-        option.classList.remove('selected');
-      });
- 
-    document.getElementById('qName').value = '';
-    document.getElementById('qGrade').value = '';
+
+err.style.display = 'none';
+
+const answers = [p1, p2, p3, p4, p5, p6, p7, p8, p9];
+
+const correct = answers.filter(a => a.value === 'c').length;
+const total = answers.length;
+
+  addToRegistro({
+    name, grade, correct, total,
+    date: new Date().toLocaleString('es-CO', {dateStyle:'short', timeStyle:'short'})
   });
-}
- 
- 
-// ---------- copiar enlace ----------
-const copyLink = document.getElementById('copyLink');
- 
-if (copyLink) {
-  copyLink.addEventListener('click', async () => {
-    const field = document.getElementById('shareLink');
- 
-    if (!field) return;
- 
-    field.select();
- 
-    try {
-      await navigator.clipboard.writeText(field.value);
-    } catch (error) {
-      document.execCommand('copy');
-    }
- 
-    const oldText = copyLink.textContent;
-    copyLink.textContent = '¡Copiado!';
- 
-    setTimeout(() => {
-      copyLink.textContent = oldText;
-    }, 1500);
-  });
-}
- 
- 
-// ============================================================
-// REGISTRO DE PARTICIPANTES
-// ============================================================
- 
-const APPS_SCRIPT_URL =
-  'https://script.google.com/macros/s/AKfycbxx-2ZbSj0zRPB3JFIsMUbZJ3EA0egWiuFDh6WQ4wdY3TwEvS08V5tGkDl69UGzghbwPg/exec';
- 
-const REGISTRO_KEY =
-  'sanluisverde_registro';
- 
-const useSharedRegistro =
-  APPS_SCRIPT_URL.trim().startsWith('http');
- 
+
+  document.getElementById('thanksName').textContent = `¡Gracias, ${name}!`;
+  document.getElementById('thanksScoreText').textContent = `Respondiste correctamente ${correct} de ${total} preguntas (${grade}).`;
+  document.getElementById('shareLink').value = window.location.href.split('#')[0] + '#participa';
+
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('thanksCard').style.display = 'block';
+});
+
+document.getElementById('tryAgain').addEventListener('click', () => {
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('thanksCard').style.display = 'none';
+  document.querySelectorAll('.opt input[type=radio]').forEach(r => r.checked = false);
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  document.getElementById('qName').value = '';
+  document.getElementById('qGrade').value = '';
+});
+
+document.getElementById('copyLink').addEventListener('click', () => {
+  const field = document.getElementById('shareLink');
+  field.select();
+  navigator.clipboard?.writeText(field.value);
+  const btn = document.getElementById('copyLink');
+  const old = btn.textContent;
+  btn.textContent = '¡Copiado!';
+  setTimeout(() => btn.textContent = old, 1500);
+});
+
+// ---------- registro de participantes (nombre, grado, puntaje) ----------
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxx-2ZbSj0zRPB3JFIsMUbZJ3EA0egWiuFDh6WQ4wdY3TwEvS08V5tGkDl69UGzghbwPg/exec';
+
+
+const REGISTRO_KEY = 'sanluisverde_registro';
+const useSharedRegistro = APPS_SCRIPT_URL.trim().startsWith('http');
 let ultimoRegistroCargado = [];
- 
- 
-function getLocalRegistro() {
-  try {
-    return JSON.parse(
-      localStorage.getItem(REGISTRO_KEY)
-    ) || [];
-  } catch (error) {
-    return [];
-  }
+
+function getLocalRegistro(){
+  try { return JSON.parse(localStorage.getItem(REGISTRO_KEY)) || []; }
+  catch(e){ return []; }
 }
- 
- 
-function saveLocalRegistro(list) {
-  try {
-    localStorage.setItem(
-      REGISTRO_KEY,
-      JSON.stringify(list)
-    );
-  } catch (error) {
-    console.warn(
-      'No se pudo guardar el registro local.',
-      error
-    );
-  }
+function saveLocalRegistro(list){
+  try { localStorage.setItem(REGISTRO_KEY, JSON.stringify(list)); }
+  catch(e){ /* almacenamiento no disponible en este navegador */ }
 }
- 
- 
-function escapeHtml(value) {
+function escapeHtml(str){
   const div = document.createElement('div');
-  div.textContent = String(value ?? '');
+  div.textContent = str;
   return div.innerHTML;
 }
- 
- 
-async function addToRegistro(entry) {
+
+async function addToRegistro(entry){
+  // respaldo local: siempre se guarda también en este dispositivo, aunque haya registro compartido
   const local = getLocalRegistro();
- 
   local.push(entry);
- 
   saveLocalRegistro(local);
- 
-  if (useSharedRegistro) {
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(entry)
-      });
-    } catch (error) {
-      console.warn(
-        'No se pudo enviar al registro compartido. Se guardó localmente.',
-        error
-      );
+
+  if(useSharedRegistro){
+    try{
+      await fetch(APPS_SCRIPT_URL, { method:'POST', body: JSON.stringify(entry) });
+    } catch(e){
+      console.warn('No se pudo enviar al registro compartido; se guardó localmente.', e);
     }
   }
- 
   await refreshRegistro();
 }
- 
- 
-function renderRegistro(list) {
-  ultimoRegistroCargado = Array.isArray(list)
-    ? list
-    : [];
- 
-  const tbody =
-    document.getElementById('registroBody');
- 
-  const empty =
-    document.getElementById('registroEmpty');
- 
-  if (!tbody || !empty) return;
- 
+
+function renderRegistro(list){
+  ultimoRegistroCargado = list;
+  const tbody = document.getElementById('registroBody');
+  const empty = document.getElementById('registroEmpty');
   tbody.innerHTML = '';
- 
-  if (!ultimoRegistroCargado.length) {
+  if(!list || list.length === 0){
     empty.style.display = 'block';
     return;
   }
- 
   empty.style.display = 'none';
- 
-  ultimoRegistroCargado.forEach((entry, index) => {
+  list.forEach((entry, i) => {
     const tr = document.createElement('tr');
- 
-    tr.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${escapeHtml(entry.name)}</td>
-      <td>${escapeHtml(entry.grade)}</td>
-      <td class="mono">
-        ${escapeHtml(entry.correct)} /
-        ${escapeHtml(entry.total)}
-      </td>
-      <td>${escapeHtml(entry.date)}</td>
-    `;
- 
+    tr.innerHTML = `<td>${i + 1}</td><td>${escapeHtml(entry.name)}</td><td>${escapeHtml(entry.grade)}</td><td class="mono">${entry.correct} / ${entry.total}</td><td>${escapeHtml(entry.date)}</td>`;
     tbody.appendChild(tr);
   });
 }
- 
- 
-async function refreshRegistro() {
+
+async function refreshRegistro(){
   let list;
- 
-  if (useSharedRegistro) {
-    try {
-      const response =
-        await fetch(APPS_SCRIPT_URL);
- 
-      if (!response.ok) {
-        throw new Error(
-          `HTTP ${response.status}`
-        );
-      }
- 
-      list = await response.json();
-    } catch (error) {
-      console.warn(
-        'No se pudo leer el registro compartido. Mostrando registro local.',
-        error
-      );
- 
+  if(useSharedRegistro){
+    try{
+      const res = await fetch(APPS_SCRIPT_URL);
+      list = await res.json();
+    } catch(e){
+      console.warn('No se pudo leer el registro compartido; mostrando el registro local.', e);
       list = getLocalRegistro();
     }
   } else {
     list = getLocalRegistro();
   }
- 
   renderRegistro(list);
 }
- 
- 
-const registroDesc =
-  document.getElementById('registroDesc');
- 
-if (registroDesc) {
-  registroDesc.textContent =
-    useSharedRegistro
-      ? 'Nombre, grado y puntaje de quienes han respondido, desde cualquier celular conectado a internet.'
-      : 'Nombre, grado y puntaje de quienes han respondido en este dispositivo.';
+
+// mensaje de estado según si el registro compartido está configurado
+document.getElementById('registroDesc').textContent = useSharedRegistro
+  ? 'Nombre, grado y puntaje de quienes han respondido, desde cualquier celular conectado a internet.'
+  : 'Nombre, grado y puntaje de quienes han respondido en este dispositivo. Para verlo en varios celulares a la vez, configura el registro compartido (ver comentario al inicio de este bloque de código).';
+
+document.getElementById('refreshRegistroBtn').addEventListener('click', refreshRegistro);
+
+// si hay registro compartido, se actualiza solo cada 15 segundos para ver las nuevas respuestas de otros celulares
+if(useSharedRegistro){
+  setInterval(refreshRegistro, 15000);
 }
- 
- 
-const refreshRegistroBtn =
-  document.getElementById('refreshRegistroBtn');
- 
-if (refreshRegistroBtn) {
-  refreshRegistroBtn.addEventListener(
-    'click',
-    refreshRegistro
-  );
-}
- 
- 
-if (useSharedRegistro) {
-  setInterval(
-    refreshRegistro,
-    15000
-  );
-}
- 
- 
-const clearRegistro =
-  document.getElementById('clearRegistro');
- 
-if (clearRegistro) {
-  clearRegistro.addEventListener('click', () => {
- 
-    if (useSharedRegistro) {
-      alert(
-        'El registro compartido vive en tu Google Sheet. Para borrarlo, elimina las filas directamente en la hoja de cálculo. Aquí solo borraremos la copia local de respaldo de este dispositivo.'
-      );
-    } else {
-      const confirmed = confirm(
-        '¿Borrar todo el registro de participantes en este dispositivo? Esta acción no se puede deshacer.'
-      );
- 
-      if (!confirmed) {
-        return;
-      }
-    }
- 
-    saveLocalRegistro([]);
- 
-    if (!useSharedRegistro) {
-      renderRegistro([]);
-    }
-  });
-}
- 
- 
-const exportCsv =
-  document.getElementById('exportCsv');
- 
-if (exportCsv) {
-  exportCsv.addEventListener('click', () => {
- 
-    const list = ultimoRegistroCargado;
- 
-    if (!list.length) return;
- 
-    let csv =
-      'Nombre,Grado,Puntaje,Total,Fecha\n';
- 
-    list.forEach(entry => {
-      csv +=
-        `"${String(entry.name).replace(/"/g, '""')}","${String(entry.grade).replace(/"/g, '""')}",${entry.correct},${entry.total},"${String(entry.date).replace(/"/g, '""')}"\n`;
-    });
- 
-    const blob = new Blob(
-      ['\ufeff' + csv],
-      {
-        type: 'text/csv;charset=utf-8;'
-      }
-    );
- 
-    const url =
-      URL.createObjectURL(blob);
- 
-    const link =
-      document.createElement('a');
- 
-    link.href = url;
-    link.download =
-      'registro-san-luis-verde.csv';
- 
-    document.body.appendChild(link);
- 
-    link.click();
- 
-    link.remove();
- 
-    URL.revokeObjectURL(url);
-  });
-}
- 
- 
-// ---------- subpestañas de Participa ----------
-document.querySelectorAll('.subtab').forEach(button => {
- 
-  button.addEventListener('click', () => {
- 
-    const target =
-      button.dataset.subtarget;
- 
-    document.querySelectorAll('.subtab').forEach(tab => {
-      tab.classList.toggle(
-        'active',
-        tab === button
-      );
-    });
- 
-    document.querySelectorAll('.subview').forEach(view => {
-      view.classList.toggle(
-        'active',
-        view.id === target
-      );
-    });
- 
-    if (target === 'vistaRegistro') {
-      refreshRegistro();
-    }
-  });
- 
+
+document.getElementById('clearRegistro').addEventListener('click', () => {
+  if(useSharedRegistro){
+    alert('El registro compartido vive en tu Google Sheet. Para borrarlo, elimina las filas directamente en la hoja de cálculo. Aquí solo borraremos la copia local de respaldo de este dispositivo.');
+  } else if(!confirm('¿Borrar todo el registro de participantes en este dispositivo? Esta acción no se puede deshacer.')){
+    return;
+  }
+  saveLocalRegistro([]);
+  if(!useSharedRegistro) renderRegistro([]);
 });
- 
- 
-// ---------- carga inicial ----------
-window.addEventListener('load', () => {
- 
-  // Inicio siempre es la primera sección.
-  showPanel('inicio');
- 
-  // La gráfica se prepara después de cargar.
-  // Si está oculta, se volverá a dibujar al entrar en Análisis.
-  setTimeout(() => {
-    if (document.getElementById('analisis')?.classList.contains('active')) {
-      buildChart();
-    }
-  }, 200);
- 
-  refreshRegistro();
- 
+
+document.getElementById('exportCsv').addEventListener('click', () => {
+  const list = ultimoRegistroCargado;
+  if(!list || list.length === 0) return;
+  let csv = 'Nombre,Grado,Puntaje,Total,Fecha\n';
+  list.forEach(entry => {
+    csv += `"${String(entry.name).replace(/"/g, '""')}","${String(entry.grade).replace(/"/g, '""')}",${entry.correct},${entry.total},"${entry.date}"\n`;
+  });
+  const blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'registro-san-luis-verde.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 });
+
+refreshRegistro();
+
+
+document.querySelectorAll('.subtab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.subtarget;
+
+    document.querySelectorAll('.subtab').forEach(b => b.classList.toggle('active', b === btn));
+    document.querySelectorAll('.subview').forEach(v => v.classList.toggle('active', v.id === target));
+
+    if(target === 'vistaRegistro'){
+      refreshRegistro(); // trae los datos más recientes al entrar a esta vista
+    }
+  });
+});
+
 </script>
- 
 </body>
 </html>
- 
