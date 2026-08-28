@@ -253,8 +253,84 @@
   .stat .num{font-family:'Space Mono',monospace;font-size:1.7rem;font-weight:700;color:var(--lime);}
   .stat .label{font-size:.8rem;color:#CBDCC3;margin-top:2px;}
 
-  .chart-wrap{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;height:480px;}
-  .chart-wrap canvas{max-height:100%;}
+.chart-wrap{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:22px;
+  min-height:480px;
+  overflow:hidden;
+}
+
+#plantChart{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.chart-row{
+  display:grid;
+  grid-template-columns:190px 1fr 70px;
+  align-items:center;
+  gap:12px;
+}
+
+.chart-label{
+  font-size:.78rem;
+  color:var(--ink);
+  text-align:right;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.chart-bar-area{
+  width:100%;
+  height:24px;
+  background:#EAF1E4;
+  border-radius:7px;
+  overflow:hidden;
+}
+
+.chart-bar{
+  height:100%;
+  background:#4C8C4A;
+  border-radius:7px;
+  min-width:2px;
+  transition:width .5s ease;
+}
+
+.chart-value{
+  font-family:'Space Mono',monospace;
+  font-size:.75rem;
+  color:var(--forest);
+  white-space:nowrap;
+}
+
+.chart-title{
+  font-family:'Fraunces',serif;
+  font-size:1rem;
+  color:var(--forest-dark);
+  margin-bottom:8px;
+}
+
+@media(max-width:720px){
+
+  .chart-row{
+    grid-template-columns:120px 1fr 55px;
+    gap:8px;
+  }
+
+  .chart-label{
+    font-size:.68rem;
+  }
+
+  .chart-value{
+    font-size:.68rem;
+  }
+
+}
 
   /*  tech cards  */
   .tech-card{
@@ -484,10 +560,9 @@
       <div class="stat"><div class="num" id="statTop">12,90%</div><div class="label" id="statTopLabel">categoría más abundante: Cannaceae</div></div>
     </div>
 
-    <div class="chart-wrap">
-      <canvas id="growthChart" height="420"></canvas>
-    </div>
-
+<div class="chart-wrap">
+    <canvas id="growthChart" height="420"></canvas>
+</div>
    <h3 style="font-size:1.05rem;margin:26px 0 10px;">
   Clasificación de las plantas
 </h3>
@@ -1072,18 +1147,26 @@ function buildChart(){
     return;
   }
 
-  // Obtener nombres de las categorías
+  // ==========================
+  // CATEGORÍAS
+  // ==========================
+
   const labels = rows.map(r => {
     return r.children[0]?.textContent.trim() || 'Sin categoría';
   });
 
-  // Obtener cantidades
+
+  // ==========================
+  // CANTIDADES
+  // ==========================
+
   const counts = rows.map(r => {
 
-    const raw = r.children[3]?.textContent.trim() || '';
+    const raw =
+      r.children[3]?.textContent.trim() || '';
 
-    // Busca el primer número
-    const match = raw.match(/[\d.,]+/);
+    const match =
+      raw.match(/[\d.,]+/);
 
     if(!match) return 0;
 
@@ -1092,41 +1175,65 @@ function buildChart(){
         .replace(/\./g, '')
         .replace(',', '.')
     );
+
   });
 
-  // Obtener porcentajes
+
+  // ==========================
+  // PORCENTAJES
+  // ==========================
+
   const percents = rows.map(r => {
 
-    // IMPORTANTE:
-    // Cantidad y % está en la cuarta columna = children[3]
-    const raw = r.children[3]?.textContent.trim() || '';
+    const raw =
+      r.children[3]?.textContent.trim() || '';
 
-    const match = raw.match(/([\d.,]+)\s*%/);
+    const match =
+      raw.match(/([\d.,]+)\s*%/);
 
     if(!match) return 0;
 
     return parseFloat(
       match[1].replace(',', '.')
     );
+
   });
 
 
-  // Si ya existe una gráfica, destruirla
-  if(growthChart){
-    growthChart.destroy();
-    growthChart = null;
-  }
+  // ==========================
+  // CANVAS
+  // ==========================
 
-
-  const canvas = document.getElementById('growthChart');
+  const canvas =
+    document.getElementById('growthChart');
 
   if(!canvas){
-    console.warn('No se encontró el canvas growthChart');
+
+    console.warn(
+      'No se encontró el canvas growthChart'
+    );
+
     return;
   }
 
 
-  const ctx = canvas.getContext('2d');
+  // Destruir gráfica anterior
+  if(growthChart){
+
+    growthChart.destroy();
+
+    growthChart = null;
+
+  }
+
+
+  const ctx =
+    canvas.getContext('2d');
+
+
+  // ==========================
+  // CREAR GRÁFICA
+  // ==========================
 
   growthChart = new Chart(ctx, {
 
@@ -1144,11 +1251,16 @@ function buildChart(){
 
         backgroundColor: '#4C8C4A',
 
+        borderColor: '#1F4D36',
+
+        borderWidth: 1,
+
         borderRadius: 5
 
       }]
 
     },
+
 
     options: {
 
@@ -1158,9 +1270,6 @@ function buildChart(){
 
       maintainAspectRatio: false,
 
-      animation: {
-        duration: 700
-      },
 
       scales: {
 
@@ -1178,6 +1287,7 @@ function buildChart(){
 
         },
 
+
         y: {
 
           ticks: {
@@ -1190,6 +1300,7 @@ function buildChart(){
 
       },
 
+
       plugins: {
 
         legend: {
@@ -1197,6 +1308,7 @@ function buildChart(){
           display: false
 
         },
+
 
         tooltip: {
 
@@ -1207,7 +1319,12 @@ function buildChart(){
               const porcentaje =
                 percents[context.dataIndex] || 0;
 
-              return `${context.raw} plantas (${porcentaje}%)`;
+              return (
+                context.raw +
+                ' plantas (' +
+                porcentaje +
+                '%)'
+              );
 
             }
 
@@ -1227,20 +1344,46 @@ function buildChart(){
   // ==========================
 
   const totalPlantas =
-    counts.reduce((a,b) => a + b, 0);
+    counts.reduce(
+      (a,b) => a + b,
+      0
+    );
 
-  document.getElementById('statPlantas').textContent =
-    totalPlantas;
 
-  document.getElementById('statCategorias').textContent =
-    rows.length;
+  const statPlantas =
+    document.getElementById('statPlantas');
 
+  if(statPlantas){
+
+    statPlantas.textContent =
+      totalPlantas;
+
+  }
+
+
+  const statCategorias =
+    document.getElementById('statCategorias');
+
+  if(statCategorias){
+
+    statCategorias.textContent =
+      rows.length;
+
+  }
+
+
+  // ==========================
+  // CATEGORÍA MÁS ABUNDANTE
+  // ==========================
 
   let topIndex = 0;
 
+
   percents.forEach((p,i) => {
 
-    if(p > percents[topIndex]){
+    if(
+      p > percents[topIndex]
+    ){
 
       topIndex = i;
 
@@ -1248,6 +1391,99 @@ function buildChart(){
 
   });
 
+
+  const topName =
+    labels[topIndex]
+      .replace(/^\d+\.\s*/, '')
+      .split('–')[0]
+      .trim();
+
+
+  const statTop =
+    document.getElementById('statTop');
+
+  if(statTop){
+
+    statTop.textContent =
+      percents[topIndex]
+        .toString()
+        .replace('.', ',') +
+      '%';
+
+  }
+
+
+  const statTopLabel =
+    document.getElementById('statTopLabel');
+
+  if(statTopLabel){
+
+    statTopLabel.textContent =
+      'categoría más abundante: ' +
+      topName;
+
+  }
+
+}
+
+
+// ==========================
+// ACTUALIZAR GRÁFICA
+// ==========================
+
+const recalcBtn =
+  document.getElementById('recalcBtn');
+
+if(recalcBtn){
+
+  recalcBtn.addEventListener(
+    'click',
+    buildChart
+  );
+
+}
+
+
+// ==========================
+// AL CARGAR LA PÁGINA
+// ==========================
+
+window.addEventListener(
+  'load',
+  buildChart
+);
+
+
+// ==========================
+// AL EDITAR LA TABLA
+// ==========================
+
+const plantBody =
+  document.querySelector(
+    '#plantTable tbody'
+  );
+
+if(plantBody){
+
+  plantBody.addEventListener(
+    'blur',
+    function(e){
+
+      if(
+        e.target.matches(
+          'td[contenteditable]'
+        )
+      ){
+
+        buildChart();
+
+      }
+
+    },
+    true
+  );
+
+}
 
   const topName =
     labels[topIndex]
