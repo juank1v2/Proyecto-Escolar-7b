@@ -491,43 +491,145 @@
       <canvas id="growthChart" height="420"></canvas>
     </div>
 
-    <h3 style="font-size:1.05rem;margin:26px 0 10px;">Clasificación de las plantas</h3>
-    <div class="card">
-      <p style="margin:0 0 14px;font-size:.85rem;color:var(--ink-soft);">Toca una celda para editarla; la gráfica se actualiza sola.</p>
-      <div style="overflow-x:auto;">
-      <table id="plantTable" class="wide-table">
-        <thead>
-          <tr>
-            <th style="min-width:170px;">Categoría</th>
-            <th style="min-width:260px;">Resumen para el proyecto</th>
-            <th style="min-width:170px;">Flor y fruto</th>
-            <th style="min-width:110px;">Cantidad y %</th>
-            <th style="min-width:260px;">Pregunta y respuesta</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td contenteditable="true">1. Myrtaceae – feijoa</td><td contenteditable="true">Son árboles o arbustos con hojas resistentes y generalmente aromáticas. La feijoa produce flores vistosas y un fruto verde comestible.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿Qué fruto se observó? La feijoa.</td></tr>
-          <tr><td contenteditable="true">2. Piperaceae</td><td contenteditable="true">Incluye plantas como la pimienta. Presenta hojas simples y pequeñas flores agrupadas en estructuras parecidas a espigas.</td><td contenteditable="true">Flor: sí. Fruto: sí, generalmente pequeño.</td><td contenteditable="true" class="mono">16 — 2,06 %</td><td contenteditable="true">¿Cómo se agrupan sus flores? En espigas.</td></tr>
-          <tr><td contenteditable="true">3. Melastomataceae</td><td contenteditable="true">Sus hojas suelen tener varias nervaduras longitudinales muy marcadas. Muchas especies producen flores llamativas y frutos pequeños.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">1 — 0,13 %</td><td contenteditable="true">¿Cómo se reconoce su hoja? Por sus nervaduras longitudinales marcadas.</td></tr>
-          <tr><td contenteditable="true">4. Fabaceae – muestra 1</td><td contenteditable="true">Es la familia de los fríjoles, arvejas y leguminosas. Sus hojas suelen ser compuestas y su fruto característico es la vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí, en forma de vaina.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿Cuál es su fruto característico? La vaina o legumbre.</td></tr>
-          <tr><td contenteditable="true">5. Pinaceae – pino</td><td contenteditable="true">Son árboles con hojas delgadas en forma de aguja. Producen conos o piñas en los que se encuentran sus semillas.</td><td contenteditable="true">Flor verdadera: no. Fruto verdadero: no. Produce conos y semillas.</td><td contenteditable="true" class="mono">13 — 1,68 %</td><td contenteditable="true">¿El pino produce frutos? No; produce conos con semillas.</td></tr>
-          <tr><td contenteditable="true">6. Rubiaceae</td><td contenteditable="true">Sus hojas generalmente crecen de manera opuesta. Incluye plantas como el café y puede producir flores tubulares y frutos carnosos.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Qué planta conocida pertenece a esta familia? El café.</td></tr>
-          <tr><td contenteditable="true">7. Solanaceae</td><td contenteditable="true">Incluye tomate, papa, pimentón y algunas plantas ornamentales. Sus flores pueden tener forma de estrella y sus frutos pueden ser bayas o cápsulas.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">12 — 1,55 %</td><td contenteditable="true">¿Qué alimento pertenece a Solanaceae? El tomate, la papa o el pimentón.</td></tr>
-          <tr><td contenteditable="true">8. Rosaceae – rosa</td><td contenteditable="true">Incluye rosas, fresas, manzanas y duraznos. Sus hojas suelen tener bordes dentados y muchas flores presentan cinco pétalos.</td><td contenteditable="true">Flor: sí. Fruto: sí; depende de la especie.</td><td contenteditable="true" class="mono">10 — 1,29 %</td><td contenteditable="true">¿Qué planta representó esta familia? La rosa.</td></tr>
-          <tr><td contenteditable="true">9. Rutaceae</td><td contenteditable="true">Es la familia de los cítricos, como la naranja y el limón. Sus hojas presentan sustancias aromáticas y pequeñas glándulas con aceites.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Por qué sus hojas pueden ser aromáticas? Porque contienen aceites naturales.</td></tr>
-          <tr><td contenteditable="true">10. Asteraceae</td><td contenteditable="true">Lo que parece una sola flor está formado por muchas flores pequeñas reunidas en un capítulo. Incluye margaritas y girasoles.</td><td contenteditable="true">Flor: sí. Fruto: sí, pequeño y seco.</td><td contenteditable="true" class="mono">14 — 1,81 %</td><td contenteditable="true">¿Una margarita es una sola flor? No; reúne muchas flores pequeñas.</td></tr>
-          <tr><td contenteditable="true">11. Fabaceae – muestra 2 (leguminosa)</td><td contenteditable="true">Es otra muestra de la misma familia Fabaceae. Puede tener hojas compuestas, flores de diferentes formas y frutos en vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">2 — 0,26 %</td><td contenteditable="true">¿Fabaceae y leguminosa son familias diferentes? No; corresponden al mismo grupo.</td></tr>
-          <tr><td contenteditable="true">12. Cannaceae – achira</td><td contenteditable="true">La achira posee hojas grandes, anchas y con nervaduras paralelas. Sus flores son vistosas y su fruto es una cápsula que contiene semillas.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">100 — 12,90 %</td><td contenteditable="true">¿Cuál fue la categoría más abundante? Cannaceae, con 100 plantas.</td></tr>
-          <tr><td contenteditable="true">13. Mimosa (Fabaceae)</td><td contenteditable="true">Tiene hojas compuestas por muchos folíolos pequeños. Algunas especies cierran sus hojas cuando se tocan y producen flores agrupadas y frutos en vaina.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">3 — 0,39 %</td><td contenteditable="true">¿A qué familia pertenece Mimosa? A Fabaceae.</td></tr>
-          <tr><td contenteditable="true">14. Asparagaceae</td><td contenteditable="true">Incluye plantas ornamentales con hojas largas, firmes o agrupadas en roseta. Produce flores y frutos en forma de baya o cápsula, según la especie.</td><td contenteditable="true">Flor: sí. Fruto: sí.</td><td contenteditable="true" class="mono">5 — 0,65 %</td><td contenteditable="true">¿Qué forma pueden tener sus hojas? Largas, firmes o agrupadas en roseta.</td></tr>
-        </tbody>
-      </table>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
-        <button class="add-row" id="addPlantRow" type="button">+ Agregar categoría</button>
-        <button class="btn-secondary" id="recalcBtn" type="button">Actualizar gráfica</button>
-      </div>
-    </div>
+   <h3 style="font-size:1.05rem;margin:26px 0 10px;">
+  Clasificación de las plantas
+</h3>
+
+<div class="card">
+
+  <p style="margin:0 0 14px;font-size:.85rem;color:var(--ink-soft);">
+    Edita una celda y actualiza la gráfica.
+  </p>
+
+  <div style="overflow-x:auto;">
+    <table id="plantTable" class="wide-table">
+
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Características</th>
+          <th>Flor y fruto</th>
+          <th>Cantidad y %</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td contenteditable="true">1. Myrtaceae – feijoa</td>
+          <td contenteditable="true">Árbol o arbusto de hojas aromáticas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">3 — 0,39 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">2. Piperaceae</td>
+          <td contenteditable="true">Hojas simples y flores en espigas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">16 — 2,06 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">3. Melastomataceae</td>
+          <td contenteditable="true">Hojas con nervaduras marcadas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">1 — 0,13 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">4. Fabaceae – muestra 1</td>
+          <td contenteditable="true">Familia de las leguminosas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: vaina.</td>
+          <td contenteditable="true" class="mono">3 — 0,39 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">5. Pinaceae – pino</td>
+          <td contenteditable="true">Hojas en forma de aguja.</td>
+          <td contenteditable="true">Sin flores ni frutos verdaderos.</td>
+          <td contenteditable="true" class="mono">13 — 1,68 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">6. Rubiaceae</td>
+          <td contenteditable="true">Hojas opuestas. Incluye el café.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">2 — 0,26 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">7. Solanaceae</td>
+          <td contenteditable="true">Incluye tomate, papa y pimentón.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">12 — 1,55 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">8. Rosaceae – rosa</td>
+          <td contenteditable="true">Incluye rosas, fresas y manzanas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">10 — 1,29 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">9. Rutaceae</td>
+          <td contenteditable="true">Familia de los cítricos.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">2 — 0,26 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">10. Asteraceae</td>
+          <td contenteditable="true">Muchas flores pequeñas forman un capítulo.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">14 — 1,81 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">11. Fabaceae – muestra 2</td>
+          <td contenteditable="true">Otra muestra de Fabaceae.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">2 — 0,26 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">12. Cannaceae – achira</td>
+          <td contenteditable="true">Hojas grandes y flores vistosas.</td>
+          <td contenteditable="true">Flor: sí. Fruto: cápsula.</td>
+          <td contenteditable="true" class="mono">100 — 12,90 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">13. Mimosa (Fabaceae)</td>
+          <td contenteditable="true">Hojas con muchos folíolos.</td>
+          <td contenteditable="true">Flor: sí. Fruto: vaina.</td>
+          <td contenteditable="true" class="mono">3 — 0,39 %</td>
+        </tr>
+
+        <tr>
+          <td contenteditable="true">14. Asparagaceae</td>
+          <td contenteditable="true">Hojas largas o en roseta.</td>
+          <td contenteditable="true">Flor: sí. Fruto: sí.</td>
+          <td contenteditable="true" class="mono">5 — 0,65 %</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+
+    <button class="add-row" id="addPlantRow" type="button">
+      + Agregar categoría
+    </button>
+
+    <button class="btn-secondary" id="recalcBtn" type="button">
+      Actualizar gráfica
+    </button>
+
+  </div>
+
+</div>
   </section>
 
   <!-- ===================== 4. SOLUCIONES TECNOLÓGICAS ===================== -->
