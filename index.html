@@ -427,51 +427,43 @@
       <p style="color:var(--ink-soft);max-width:60ch;">Fotos del recorrido: lo que encontramos, clasificamos y lo que hay que mejorar.</p>
     </div>
 
-     <h3 style="font-size:1.05rem;margin-bottom:10px;">Recorrido fotográfico</h3>
-    <div class="grid3" id="photoGrid">
-      <div class="photo-card">
-        <img src="Fotos/grupo 1.jpg" alt="Entrada / fachada verde" onerror="this.closest('.photo-card').classList.add('photo-missing')">
-        <p class="photo-caption">primera foto</p>
-      </div>
-      <div class="photo-card">
-        <img src="Fotos/grupo 2.jpeg" alt="Jardín con basura" onerror="this.closest('.photo-card').classList.add('photo-missing')">
-        <p class="photo-caption">segunda foto</p>
-      </div>
-      <div class="photo-card">
-        <img src="Fotos/grupo 3.jpeg" alt="Planta dañada" onerror="this.closest('.photo-card').classList.add('photo-missing')">
-        <p class="photo-caption">tercera foto</p>
-      </div>
-      <div class="photo-card">
-        <img src="Fotos/grupo 4.jpeg" alt="Zona sin cuidado" onerror="this.closest('.photo-card').classList.add('photo-missing')">
-        <p class="photo-caption">cuarta foto</p>
-      </div>
-    </div>
+  <h3 style="font-size:1.05rem;margin:26px 0 10px;">Clasificación de las plantas</h3>
 
-    <h3 style="font-size:1.05rem;margin:30px 0 10px;">Problemas encontrados</h3>
-    <div class="grid3">
-      <div class="card">
-        <div class="img-frame">
-          <img src="Fotos/basura.jpg" alt="Basura acumulada" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="img-fallback">📷 Agrega Fotos/basura.jpg</div>
-        </div>
-        <span class="tag warn">Basura</span><p style="margin:0;font-size:.9rem;">Residuos acumulados en jardineras y zonas de descanso.</p>
-      </div>
-      <div class="card">
-        <div class="img-frame">
-          <img src="Fotos/plantas_dañadas.jpg" alt="Planta dañada" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="img-fallback">📷 Agrega Fotos/plantas_danadas.jpg</div>
-        </div>
-        <span class="tag warn">Plantas dañadas</span><p style="margin:0;font-size:.9rem;">Hojas secas, tallos rotos y suelo pisoteado.</p>
-      </div>
-      <div class="card">
-        <div class="img-frame">
-          <img src="Fotos/falta_riego.jpg" alt="Falta de riego" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="img-fallback">📷 Agrega Fotos/falta_riego.jpg</div>
-        </div>
-        <span class="tag warn">Falta de riego</span><p style="margin:0;font-size:.9rem;">Sin horario ni responsable fijo de riego.</p>
-      </div>
-    </div>
-  </section>
+<div class="card">
+  <div style="overflow-x:auto;">
+    <table id="plantTable" class="wide-table">
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Característica</th>
+          <th>Cantidad y %</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr><td contenteditable="true">Myrtaceae – feijoa</td><td contenteditable="true">Árbol de hojas aromáticas.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
+        <tr><td contenteditable="true">Piperaceae</td><td contenteditable="true">Hojas simples y flores en espigas.</td><td contenteditable="true" class="mono">16 — 2,06 %</td></tr>
+        <tr><td contenteditable="true">Melastomataceae</td><td contenteditable="true">Hojas con nervaduras marcadas.</td><td contenteditable="true" class="mono">1 — 0,13 %</td></tr>
+        <tr><td contenteditable="true">Fabaceae</td><td contenteditable="true">Familia de las leguminosas.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
+        <tr><td contenteditable="true">Pinaceae – pino</td><td contenteditable="true">Hojas en forma de aguja.</td><td contenteditable="true" class="mono">13 — 1,68 %</td></tr>
+        <tr><td contenteditable="true">Rubiaceae</td><td contenteditable="true">Incluye el café.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
+        <tr><td contenteditable="true">Solanaceae</td><td contenteditable="true">Incluye tomate y papa.</td><td contenteditable="true" class="mono">12 — 1,55 %</td></tr>
+        <tr><td contenteditable="true">Rosaceae – rosa</td><td contenteditable="true">Incluye rosas y fresas.</td><td contenteditable="true" class="mono">10 — 1,29 %</td></tr>
+        <tr><td contenteditable="true">Rutaceae</td><td contenteditable="true">Familia de los cítricos.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
+        <tr><td contenteditable="true">Asteraceae</td><td contenteditable="true">Incluye margaritas y girasoles.</td><td contenteditable="true" class="mono">14 — 1,81 %</td></tr>
+        <tr><td contenteditable="true">Fabaceae – muestra 2</td><td contenteditable="true">Otra muestra de Fabaceae.</td><td contenteditable="true" class="mono">2 — 0,26 %</td></tr>
+        <tr><td contenteditable="true">Cannaceae – achira</td><td contenteditable="true">Hojas grandes y flores vistosas.</td><td contenteditable="true" class="mono">100 — 12,90 %</td></tr>
+        <tr><td contenteditable="true">Mimosa (Fabaceae)</td><td contenteditable="true">Hojas con muchos folíolos.</td><td contenteditable="true" class="mono">3 — 0,39 %</td></tr>
+        <tr><td contenteditable="true">Asparagaceae</td><td contenteditable="true">Hojas largas o en roseta.</td><td contenteditable="true" class="mono">5 — 0,65 %</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:14px;">
+    <button class="add-row" id="addPlantRow" type="button">+ Agregar categoría</button>
+    <button class="btn-secondary" id="recalcBtn" type="button">Actualizar gráfica</button>
+  </div>
+</div>  </section>
 
   <!-- ===================== 3. ANÁLISIS DE DATOS ===================== -->
   <section class="panel" id="analisis">
